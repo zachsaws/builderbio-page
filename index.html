@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+<title>AI Builder 档案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#111111;--s1:#1A1A1A;--s2:#222222;--s3:#2A2A2A;
+  --bd:#333333;--bd2:#444444;
+  --t:#f0f0f5;--t2:#b8b8c8;--tm:#6b6b80;
+  --ac:#818cf8;--acd:#6366f1;--acb:rgba(99,102,241,.08);
+  --g:#34d399;--gd:rgba(52,211,153,.1);
+  --y:#fbbf24;--yd:rgba(251,191,36,.1);
+  --b:#60a5fa;--bd3:rgba(96,165,250,.1);
+  --p:#a78bfa;--pd:rgba(167,139,250,.1);
+  --o:#fb923c;--od:rgba(251,146,60,.1);
+  --pk:#f472b6;--r:#f87171;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100vw;padding-top:3rem}
+
+/* NAV BAR — hardcoded colors to match site-wide Titlebar exactly */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(26,26,26,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.site-nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#333,transparent)}
+.site-nav-inner{max-width:72rem;margin:0 auto;display:flex;height:3rem;align-items:center;justify-content:space-between;padding:0 1rem}
+.site-nav-logo{display:flex;align-items:center;gap:.5rem;color:#999;font-weight:700;font-size:.875rem;line-height:1.25rem;letter-spacing:.025em;text-decoration:none;transition:color .2s;font-family:'JetBrains Mono','Fira Code','SF Mono',ui-monospace,monospace}
+.site-nav-logo:hover{color:#FF6B35}
+.site-nav-logo .tilde{color:inherit}
+.site-nav-links{display:flex;align-items:center;gap:1rem;font-size:.75rem;line-height:1rem;color:#999;font-family:'JetBrains Mono','Fira Code','SF Mono',ui-monospace,monospace}
+.site-nav-links a{color:inherit;text-decoration:none;transition:color .2s}
+.site-nav-links a:hover{color:#FF6B35}
+.site-nav-links .sep{color:#555}
+.site-nav-links .active{color:#FF6B35}
+
+/* SHARE BAR */
+.share-bar{position:fixed;bottom:24px;right:24px;z-index:40;display:flex;gap:8px;align-items:center}
+.share-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:var(--s2);border:1px solid var(--bd);color:var(--t2);transition:all .25s;cursor:pointer;text-decoration:none}
+.share-btn:hover{border-color:var(--bd2);color:var(--t);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.share-btn svg{width:18px;height:18px;fill:currentColor}
+.share-btn .share-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--s3);color:var(--t2);font-size:11px;padding:4px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;border:1px solid var(--bd)}
+.share-btn:hover .share-tooltip{opacity:1}
+.share-btn.copied{border-color:var(--g);color:var(--g)}
+.c{max-width:880px;margin:0 auto;padding:0 24px}
+section{padding:60px 0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bd),transparent)}
+.sh{margin-bottom:28px}.sh h2{font-size:22px;font-weight:700;letter-spacing:-.02em}.sh p{font-size:13px;color:var(--tm);margin-top:2px}
+
+/* HERO */
+.hero{padding:80px 0 60px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.06)0%,rgba(52,211,153,.03)40%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;color:var(--ac);background:var(--acb);border:1px solid rgba(99,102,241,.15);margin-bottom:24px;letter-spacing:.3px}
+.unfiltered-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#34d399;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);vertical-align:middle;margin-left:8px;cursor:default;position:relative;-webkit-text-fill-color:#34d399;-webkit-background-clip:unset;background-clip:unset}
+.unfiltered-badge svg{width:12px;height:12px;fill:currentColor;flex-shrink:0}
+.unfiltered-badge .uf-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--s3);color:var(--t2);-webkit-text-fill-color:var(--t2);font-size:11px;font-weight:400;padding:6px 12px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;border:1px solid var(--bd)}
+.unfiltered-badge:hover .uf-tip{opacity:1}
+.gen-time{font-size:11px;color:var(--tm);margin-top:6px}
+.hero h1{font-size:48px;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,var(--t) 0%,var(--t2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.hero .sub{font-size:15px;color:var(--tm);margin-bottom:40px}
+.stats-row{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.stat{text-align:center}.stat .num{font-size:42px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.stat .num.ac{color:var(--ac)}.stat .num.gc{color:var(--g)}.stat .num.yc{color:var(--y)}.stat .num.bc{color:var(--b)}
+.stat .lbl{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:1.2px;font-weight:600;margin-top:6px}
+.agent-row{display:flex;justify-content:center;gap:10px;margin-top:28px;flex-wrap:wrap}
+.agent-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:100px;font-size:13px;font-weight:500;background:var(--s2);color:var(--t2);border:1px solid var(--bd)}
+.agent-dot{width:8px;height:8px;border-radius:50%}
+.hero-avatar{width:88px;height:88px;border-radius:50%;border:3px solid var(--bd2);object-fit:cover;margin:0 auto 16px;box-shadow:0 0 0 4px var(--bg),0 0 24px rgba(99,102,241,.15);display:none}
+.scan-audit{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.scan-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--s2);border:1px solid var(--bd);font-size:11px;color:var(--t2);font-weight:600}
+.scan-chip.warn{border-color:rgba(251,191,36,.35);color:var(--y);background:rgba(251,191,36,.08)}
+.scan-chip.ok{border-color:rgba(52,211,153,.28);color:var(--g);background:rgba(52,211,153,.08)}
+.scan-note{width:100%;max-width:620px;margin:4px auto 0;font-size:12px;color:var(--tm);line-height:1.55}
+.social-row{display:flex;justify-content:center;gap:14px;margin-top:22px}
+.social-link{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:var(--s2);border:1px solid var(--bd);color:var(--t2);transition:all .25s;text-decoration:none}
+.social-link:hover{border-color:var(--bd2);color:var(--t);transform:translateY(-2px)}
+.social-link svg{width:20px;height:20px;fill:currentColor}
+
+/* PROJECTS */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pcard{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:20px;transition:all .25s}
+.pcard:hover{border-color:var(--bd2);transform:translateY(-2px)}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.pname{font-size:15px;font-weight:700;line-height:1.3}
+.pstatus{padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.ps-shipped{background:var(--gd);color:var(--g)}.ps-progress{background:var(--yd);color:var(--y)}.ps-explored{background:var(--bd3);color:var(--b)}
+.pdesc{font-size:12.5px;color:var(--t2);margin-bottom:12px;line-height:1.55}
+.ptags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.ptag{padding:3px 10px;border-radius:100px;font-size:10.5px;background:var(--s3);color:var(--tm);border:1px solid var(--bd);font-weight:500}
+.pmeta{font-size:11.5px;color:var(--tm);display:flex;gap:12px}.pmeta strong{color:var(--t2);font-weight:600}
+
+/* STYLE */
+.style-hero{text-align:center;margin-bottom:32px;padding:28px 0}
+.style-label{font-size:32px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(135deg,var(--ac),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.style-sub{font-size:14px;color:var(--tm);margin-top:6px}
+.traits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.trait{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:18px;text-align:center}
+.trait .tname{font-size:10.5px;color:var(--tm);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px}
+.trait .tval{font-size:20px;font-weight:800}.trait .tdesc{font-size:11px;color:var(--tm);margin-top:4px;line-height:1.4}
+.tbar-wrap{margin-top:28px}.tbar-label{font-size:10.5px;color:var(--tm);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:10px}
+.tbar{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px}.tseg{height:100%;border-radius:3px;min-width:3px}
+.tleg{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.tleg-i{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tm);font-weight:500}.tleg-d{width:7px;height:7px;border-radius:2px}
+
+/* TECH RADAR */
+.radar-wrap{display:flex;justify-content:center;padding:20px 0}
+.radar-bars{width:100%;max-width:600px}
+.radar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.radar-label{width:140px;font-size:12px;color:var(--t2);text-align:right;font-weight:500;flex-shrink:0}
+.radar-bar-bg{flex:1;height:20px;background:var(--s2);border-radius:10px;overflow:hidden}
+.radar-bar{height:100%;border-radius:10px;transition:width .6s ease}
+.radar-val{width:36px;font-size:11px;color:var(--tm);font-weight:600}
+
+/* EVOLUTION CHART */
+.evo-chart{position:relative;height:200px;display:flex;align-items:flex-end;gap:6px;padding:0 0 40px}
+.evo-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.evo-bar{width:100%;border-radius:6px 6px 0 0;transition:height .4s ease;position:relative;min-height:4px}
+.evo-bar:hover{opacity:.85}
+.evo-val{font-size:10px;color:var(--tm);font-weight:600}
+.evo-label{font-size:10px;color:var(--tm);position:absolute;bottom:-24px;white-space:nowrap}
+.evo-legend{display:flex;gap:16px;margin-top:20px;font-size:11px;color:var(--tm)}
+.evo-legend span{display:flex;align-items:center;gap:5px}
+.evo-legend-dot{width:8px;height:8px;border-radius:2px}
+
+/* TIME DISTRIBUTION */
+.time-bars{display:flex;align-items:flex-end;gap:3px;height:120px;padding:0 0 24px;position:relative}
+.time-bar{flex:1;border-radius:4px 4px 0 0;min-height:2px;transition:height .3s;position:relative}
+.time-bar:hover .time-tip{opacity:1}
+.time-tip{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:10px;background:var(--s3);color:var(--t2);padding:2px 6px;border-radius:4px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.time-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--tm);margin-top:4px}
+.time-type{text-align:center;margin-top:20px}
+.time-type .big{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.time-type .small{font-size:13px;color:var(--tm);margin-top:4px}
+.period-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.period-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center}
+.period-card .p-name{font-size:11px;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.period-card .p-val{font-size:20px;font-weight:800;margin:4px 0 2px}
+.period-card .p-sub{font-size:10.5px;color:var(--tm)}
+
+/* KEYWORDS */
+.kw-cloud{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:20px 0}
+.kw{padding:6px 16px;border-radius:100px;font-weight:600;border:1px solid var(--bd);transition:all .2s;cursor:default}
+.kw:hover{border-color:var(--bd2);transform:scale(1.05)}
+
+/* AGENT COMPARISON */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cmp-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px}
+.cmp-name{font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.cmp-name .dot{width:10px;height:10px;border-radius:50%}
+.cmp-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp-stat{text-align:center;padding:10px;background:var(--s2);border-radius:10px}
+.cmp-stat .cv{font-size:20px;font-weight:800}.cmp-stat .cl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.cmp-tools{margin-top:14px}.cmp-tools-label{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:6px}
+.cmp-tool-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;color:var(--t2)}
+.cmp-tool-bar{flex:1;height:6px;background:var(--s3);border-radius:3px;overflow:hidden}.cmp-tool-fill{height:100%;border-radius:3px}
+
+/* HEATMAP */
+.hm-scroll{overflow-x:auto;padding:4px 0}.hm-grid{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px}
+.hm-cell{width:13px;height:13px;border-radius:3px;background:var(--s2);transition:background .15s}
+.hm-0{background:var(--s2)}.hm-1{background:rgba(52,211,153,.18)}.hm-2{background:rgba(52,211,153,.38)}.hm-3{background:rgba(52,211,153,.6)}.hm-4{background:rgba(52,211,153,.88)}
+.hm-meta{display:flex;gap:24px;margin-top:14px;font-size:12.5px;color:var(--tm)}.hm-meta strong{color:var(--t2)}
+.hm-legend{display:flex;align-items:center;gap:4px;margin-top:10px;font-size:11px;color:var(--tm)}.hm-legend-cell{width:13px;height:13px;border-radius:3px}
+
+/* HIGHLIGHTS */
+.hl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.hl{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px;position:relative;overflow:hidden}
+.hl::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;border-radius:50%;filter:blur(40px);opacity:.08;pointer-events:none}
+.hl:nth-child(1)::before{background:var(--ac)}.hl:nth-child(2)::before{background:var(--g)}.hl:nth-child(3)::before{background:var(--y)}.hl:nth-child(4)::before{background:var(--p)}
+.hl .hl-t{font-size:10.5px;color:var(--tm);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.hl .hl-v{font-size:28px;font-weight:800;margin:8px 0 4px;letter-spacing:-.02em}.hl .hl-d{font-size:12px;color:var(--tm);line-height:1.5}
+.fav-prompt{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:28px;margin-top:18px;border-left:3px solid var(--ac)}
+.fp-label{font-size:10.5px;color:var(--ac);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin-bottom:12px}
+.fp-text{font-size:14px;line-height:1.8;color:var(--t2);font-family:"SF Mono","Fira Code","JetBrains Mono",monospace;white-space:pre-wrap;word-break:break-word}
+
+/* RECAP */
+.recap-grid,.spotlight-grid,.role-grid,.move-grid{display:grid;gap:16px}
+.recap-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)}
+.spotlight-grid,.role-grid,.move-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.recap-card,.spotlight-card,.role-card,.move-card{background:var(--s1);border:1px solid var(--bd);border-radius:18px;padding:24px;position:relative;overflow:hidden}
+.recap-card::before,.spotlight-card::before,.role-card::before,.move-card::before{content:'';position:absolute;top:-40px;right:-20px;width:140px;height:140px;border-radius:50%;filter:blur(46px);opacity:.08;pointer-events:none;background:var(--ac)}
+.recap-kicker{font-size:10.5px;color:var(--ac);text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin-bottom:12px}
+.recap-title{font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1.03;color:var(--t)}
+.recap-body{font-size:14px;line-height:1.75;color:var(--t2);margin-top:14px}
+.signal-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.signal-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--s2);border:1px solid var(--bd);font-size:11px;color:var(--t2);font-weight:600}
+.signal-chip .signal-dot{width:6px;height:6px;border-radius:999px;background:var(--ac)}
+.scale-value{font-size:42px;font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--t)}
+.scale-sub{font-size:13px;color:var(--tm);margin-top:10px;line-height:1.6}
+.scale-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.scale-stat{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.scale-stat .sv{font-size:20px;font-weight:800;color:var(--t)}
+.scale-stat .sl{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.12em;margin-top:4px}
+.spotlight-title{font-size:24px;font-weight:800;letter-spacing:-.03em;color:var(--t)}
+.spotlight-meta{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:var(--acb);border:1px solid rgba(255,107,53,.18);font-size:10px;color:var(--ac);text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin-bottom:12px}
+.spotlight-text{font-size:14px;line-height:1.75;color:var(--t2);margin-top:12px}
+.spotlight-proof{margin-top:16px;display:grid;gap:10px}
+.proof-pill{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;background:var(--s2);border:1px solid var(--bd);font-size:12px;color:var(--t2);line-height:1.55}
+.proof-pill .proof-dot{width:7px;height:7px;border-radius:999px;background:var(--g);margin-top:6px;flex-shrink:0}
+.role-name{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:var(--t)}
+.role-name .dot{width:10px;height:10px;border-radius:999px}
+.role-tag{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:var(--s2);border:1px solid var(--bd);font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:.14em;font-weight:700;margin:14px 0 10px}
+.role-text{font-size:13px;line-height:1.7;color:var(--t2)}
+.role-evidence{margin-top:14px;font-size:12px;color:var(--tm)}
+.move-title{font-size:18px;font-weight:800;color:var(--t)}
+.move-text{font-size:13px;line-height:1.7;color:var(--t2);margin-top:10px}
+.move-proof{margin-top:14px;font-size:11px;color:var(--tm);letter-spacing:.02em}
+
+@media(max-width:900px){
+  .recap-grid,.spotlight-grid,.role-grid,.move-grid{grid-template-columns:1fr}
+}
+
+/* CTA */
+.cta{padding:24px;background:var(--s1);border:1px solid rgba(255,107,53,.3);border-radius:8px;margin-top:8px;text-align:left}
+.cta-title{font-size:16px;font-weight:700;color:var(--t);margin-bottom:16px}
+.cta-install-label{font-family:"JetBrains Mono","Fira Code","SF Mono",ui-monospace,monospace;font-size:10px;font-weight:700;letter-spacing:1.4px;line-height:1.6;color:#FF6B35;margin-bottom:12px}
+.cta-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cta-badge{display:inline-flex;align-items:center;justify-content:center;height:20px;padding:0 8px;border-radius:999px;border:1px solid var(--bd);color:var(--t2);font-size:10px;font-family:"JetBrains Mono","Fira Code","SF Mono",ui-monospace,monospace}
+.cta-badge-more{padding-bottom:3px}
+.cta-cmd{display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:stretch;width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:8px;overflow:hidden;cursor:pointer}
+.cta-cmd-main{display:flex;align-items:center;gap:10px;min-width:0;padding:16px}
+.cta-dollar{color:#FF6B35;flex-shrink:0;font-family:"JetBrains Mono","Fira Code","SF Mono",ui-monospace,monospace}
+.cta-command-text{min-width:0;font-size:13px;line-height:1.6;color:var(--t);font-family:"JetBrains Mono","Fira Code","SF Mono",ui-monospace,monospace;white-space:nowrap}
+.cta-copy-btn{display:flex;align-items:center;justify-content:center;border:0;border-left:1px solid var(--bd);background:transparent;color:var(--tm);cursor:pointer;transition:color .2s}
+.cta-copy-btn:hover{color:#FF6B35}
+.cta-copy-btn svg{width:16px;height:16px;stroke:currentColor;fill:none}
+.cta-copy-icon,.cta-copied-icon{display:inline-flex;align-items:center;justify-content:center}
+.cta-copied-icon{color:#FF6B35}
+
+.footer{text-align:center;padding:48px 0 40px;font-size:12px;color:var(--tm)}
+
+/* AGENT START DATES */
+.agent-since{font-size:10px;color:var(--tm);margin-top:2px;display:block;letter-spacing:.3px}
+
+@media(max-width:640px){
+  /* === MODULE-PER-SCREEN MOBILE LAYOUT ===
+     Each section fills ~one screen with generous spacing.
+     Optimized for easy screenshots and reduced info density. */
+  section{padding:48px 0;min-height:auto;display:flex;flex-direction:column;justify-content:center}
+  .c{padding:0 18px}
+  .hero-avatar{align-self:center}
+  .divider{margin:16px 0}
+
+  /* Hero — full screen intro */
+  .hero{padding:40px 0 32px;min-height:auto}
+  .hero h1{font-size:30px;letter-spacing:-.03em}
+  .hero .sub{font-size:13px;margin-bottom:24px;line-height:1.6}
+  .stats-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px;width:100%}
+  .stat .num{font-size:28px}
+  .stat .lbl{font-size:10px;letter-spacing:.8px;margin-top:8px}
+  .agent-row{gap:8px;margin-top:18px}
+  .agent-chip{font-size:11px;padding:6px 12px;max-width:100%}
+  .agent-since{font-size:10px}
+  .scan-note{font-size:11px}
+  .tagline{font-size:13px!important}
+
+  .recap-grid,.spotlight-grid,.role-grid,.move-grid{gap:12px}
+  .recap-card,.spotlight-card,.role-card,.move-card{padding:18px}
+  .recap-title{font-size:24px;line-height:1.08}
+  .recap-body,.spotlight-text,.role-text,.move-text{font-size:13px;line-height:1.65}
+  .scale-value{font-size:30px}
+  .scale-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .scale-stat{padding:12px}
+  .scale-stat .sv{font-size:18px}
+  .spotlight-title{font-size:20px}
+  .spotlight-proof{gap:8px}
+  .proof-pill{font-size:11px;padding:9px 10px}
+  .role-name{font-size:18px}
+  .role-tag{font-size:9px}
+  .move-title{font-size:17px}
+  .move-proof{font-size:10px}
+  .signal-row{gap:6px}
+  .signal-chip{font-size:10px;padding:6px 10px}
+
+  /* Projects — one card at a time, stack vertically */
+  .pgrid{grid-template-columns:1fr;gap:16px}
+  .pcard{padding:20px}
+  .pname{font-size:15px}
+  .pdesc{font-size:13px;line-height:1.6}
+  .ptags{gap:6px}
+  .pmeta{font-size:12px;flex-wrap:wrap;row-gap:6px}
+
+  /* Style — module feel */
+  .style-hero{padding:20px 0;margin-bottom:24px}
+  .style-label{font-size:26px}
+  .style-sub{font-size:13px;line-height:1.5}
+  .traits{grid-template-columns:1fr 1fr;gap:12px}
+  .trait{padding:16px}
+  .trait .tval{font-size:18px}
+  .trait .tname{font-size:10px}
+  .trait .tdesc{font-size:11px;line-height:1.5}
+  .tleg{gap:10px;margin-top:12px}
+  .tleg-i{font-size:10px}
+  .tbar-wrap{margin-top:24px}
+
+  /* Tech Radar */
+  .radar-label{width:80px;font-size:10px}
+  .radar-bar-bg{height:18px}
+  .radar-val{font-size:10px;width:32px}
+  .radar-row{gap:10px;margin-bottom:10px}
+
+  /* Evolution */
+  .evo-chart{height:160px;gap:3px}
+  .evo-val{font-size:9px}
+  .evo-label{font-size:9px}
+  .evo-insight{font-size:13px;line-height:1.5;margin-top:16px}
+
+  /* Time — dedicated screen */
+  .time-bars{height:100px;gap:2px}
+  .time-labels{font-size:9px}
+  .time-type{margin-bottom:20px}
+  .time-type .big{font-size:24px}
+  .time-type .small{font-size:13px}
+  .period-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .period-card{padding:14px}
+  .period-card .p-val{font-size:18px}
+  .period-card .p-name{font-size:10px;margin-top:4px}
+
+  /* Keywords */
+  .kw-cloud{gap:8px;padding:16px 0}
+  .kw{padding:6px 14px;font-size:13px}
+
+  /* Agent Comparison */
+  .cmp-grid{grid-template-columns:1fr;gap:16px}
+  .cmp-card{padding:20px}
+  .cmp-name{font-size:17px}
+  .cmp-stat .cv{font-size:20px}
+  .cmp-stat .cl{font-size:10px}
+  .cmp-insight{font-size:13px;line-height:1.5}
+
+  /* Heatmap */
+  .hm-cell{width:10px;height:10px}
+  .hm-grid{gap:2px}
+  .hm-meta{flex-direction:column;gap:8px;font-size:12px}
+
+  /* Highlights — one highlight card per row */
+  .hl-grid{grid-template-columns:1fr;gap:14px}
+  .hl{padding:20px}
+  .hl .hl-v{font-size:26px}
+  .hl .hl-l{font-size:11px;margin-top:6px}
+  .fav-prompt{padding:24px;margin-top:16px}
+  .fp-text{font-size:13px;line-height:1.6}
+
+  /* CTA — clear standalone screen */
+  .cta{padding:24px 20px;min-height:auto}
+  .cta-title{font-size:15px}
+  .cta-badges{gap:6px}
+  .cta-cmd{grid-template-columns:minmax(0,1fr) 44px}
+  .cta-cmd-main{padding:12px}
+  .cta-command-text{font-size:11px;line-height:1.5;white-space:normal;word-break:break-all}
+
+  /* Section headers — breathing room */
+  .sh{margin-bottom:24px}
+  .sh h2{font-size:20px}
+  .sh p{font-size:12px;line-height:1.5}
+
+  /* Share bar */
+  .share-bar{bottom:12px;right:12px}
+  .share-btn{width:36px;height:36px;border-radius:10px}
+  .share-btn svg{width:16px;height:16px}
+
+  /* Nav — compact but readable */
+  .site-nav-inner{padding:0 .75rem}
+  .site-nav-logo{font-size:.75rem}
+  .site-nav-links{gap:.75rem;font-size:.625rem}
+  .site-nav-links .sep{display:none}
+
+  /* Footer */
+  .footer{padding:40px 0 32px!important}
+
+  /* Avatar */
+  .hero-avatar{width:72px;height:72px}
+
+  /* Social row */
+  .social-row{margin-top:18px;gap:10px}
+  .social-link{width:36px;height:36px;border-radius:10px}
+  .social-link svg{width:18px;height:18px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="https://builderbio.dev" class="site-nav-logo">
+      ~/builderbio
+    </a>
+    <div class="site-nav-links">
+      <a href="https://builderbio.dev/taste-board">/taste-board</a>
+      <span class="sep">·</span>
+      <a href="#" class="active">/built-by</a>
+    </div>
+  </div>
+</nav>
+
+<div class="share-bar" id="share-bar">
+  <button class="share-btn" id="share-copy" onclick="copyUrl()" title="Copy URL" style="position:relative">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+    <span class="share-tooltip">Copy URL</span>
+  </button>
+  <a class="share-btn" id="share-x" target="_blank" rel="noopener" title="Share on X" style="position:relative">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    <span class="share-tooltip">Share on X</span>
+  </a>
+  <a class="share-btn" id="share-linkedin" target="_blank" rel="noopener" title="Share on LinkedIn" style="position:relative">
+    <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    <span class="share-tooltip">Share on LinkedIn</span>
+  </a>
+</div>
+
+<div class="c">
+
+<section class="hero" id="section-hero">
+  <img class="hero-avatar" id="hero-avatar" src="" alt="">
+  <h1 id="hero-title">BuilderBio</h1>
+  <div id="hero-badge-row" style="margin-top:8px;margin-bottom:4px;display:none"></div>
+  <p class="tagline" id="hero-tagline" style="font-size:14px;color:var(--tm);margin-bottom:4px;display:none"></p>
+  <p class="sub" id="date-range"></p>
+  <p class="gen-time" id="gen-time" style="display:none"></p>
+  <div class="scan-audit" id="scan-audit" style="display:none"></div>
+  <div class="stats-row" id="stats-row"></div>
+  <div class="agent-row" id="agent-row"></div>
+  <div class="social-row" id="social-row"></div>
+</section>
+<div class="divider" id="divider-after-hero"></div>
+
+<section id="section-recap">
+  <div class="recap-grid">
+    <div class="recap-card" id="builder-thesis"></div>
+    <div class="recap-card" id="collaboration-scale"></div>
+  </div>
+</section>
+<div class="divider" id="divider-after-recap"></div>
+
+<section id="section-spotlight">
+  <div class="spotlight-grid">
+    <div class="spotlight-card" id="signature-build"></div>
+    <div class="spotlight-card" id="management-style"></div>
+  </div>
+</section>
+<div class="divider" id="divider-after-spotlight"></div>
+
+<section id="section-agentroles">
+  <div class="sh"><h2>Agent Roles</h2><p>What each agent is actually doing</p></div>
+  <div class="role-grid" id="agent-roles"></div>
+</section>
+<div class="divider" id="divider-after-agentroles"></div>
+
+<section id="section-moves">
+  <div class="sh"><h2>Signature Moves</h2><p>Habits that keep showing up in the work</p></div>
+  <div class="move-grid" id="signature-moves"></div>
+</section>
+<div class="divider" id="divider-after-moves"></div>
+
+<section id="section-projects"><div class="sh"><h2 id="sh-projects"></h2><p id="shp-projects"></p></div><div class="pgrid" id="projects"></div></section>
+<div class="divider" id="divider-after-projects"></div>
+
+<section id="section-tech"><div class="sh"><h2 id="sh-tech"></h2><p id="shp-tech"></p></div><div id="tech-radar"></div></section>
+<div class="divider" id="divider-after-tech"></div>
+
+<section id="section-style"><div class="sh"><h2 id="sh-style"></h2><p id="shp-style"></p></div><div id="style-section"></div></section>
+<div class="divider" id="divider-after-style"></div>
+
+<section id="section-evolution"><div class="sh"><h2 id="sh-evolution"></h2><p id="shp-evolution"></p></div><div id="evolution"></div></section>
+<div class="divider" id="divider-after-evolution"></div>
+
+<section id="section-time"><div class="sh"><h2 id="sh-time"></h2><p id="shp-time"></p></div><div id="time-dist"></div></section>
+<div class="divider" id="divider-after-time"></div>
+
+<section id="section-keywords"><div class="sh"><h2 id="sh-keywords"></h2><p id="shp-keywords"></p></div><div id="keywords"></div></section>
+<div class="divider" id="divider-after-keywords"></div>
+
+<section id="section-agentcmp"><div class="sh"><h2 id="sh-agentcmp"></h2><p id="shp-agentcmp"></p></div><div id="agent-cmp"></div></section>
+<div class="divider" id="divider-after-agentcmp"></div>
+
+<section id="section-heatmap"><div class="sh"><h2 id="sh-heatmap"></h2><p id="shp-heatmap"></p></div><div id="heatmap"></div></section>
+<div class="divider" id="divider-after-heatmap"></div>
+
+<section id="section-highlights"><div class="sh"><h2 id="sh-highlights"></h2><p id="shp-highlights"></p></div><div id="highlights"></div></section>
+<div class="divider" id="divider-after-highlights"></div>
+
+<section id="section-cta"><div id="cta-section"></div></section>
+
+<div class="footer" id="footer-text" style="padding:24px 0;text-align:center;font-size:12px;color:var(--tm)"></div>
+</div>
+
+<script>
+const D = {"profile": {"display_name": "tianxiang", "lang": "zh", "summary": "一个把 AI 当作执行系统来调度的人，先把工作流跑通，再逼近内容质量、研究深度和产品成形速度。", "tagline": "Builder-first, workflow-driven, and increasingly multi-agent.", "date_range": {"start": "2026-03-02", "end": "2026-04-22"}, "active_days": 31, "total_sessions": 70, "total_turns": 5684, "total_tool_calls": 4455, "total_tokens": 397426337, "agents_used": {"claude-code": {"sessions": 12, "turns": 1140, "first_session": "2026-04-21"}, "codex": {"sessions": 58, "turns": 4544, "first_session": "2026-03-02"}}, "scanner_version": "0.8.5", "scan_status": "partial", "scan_recommendation": "Re-run BuilderBio with the latest skill if you used agents that are missing from the badges or if the audit lists unknown sources.", "agent_sources_found": {"claude-code": 19, "codex": 102}}, "projects": [{"name": "AI Workflow Playground", "status": "shipped", "description": "The main operating room for testing AI workflows, plugin actions, presentation conversion, inbox handling, and product experiments.", "summary": "The main operating room for testing AI workflows, plugin actions, presentation conversion, inbox handling, and product experiments.", "tags": ["workflow design", "automation", "prototype ops"], "total_sessions": 17, "total_turns": 1074, "total_tool_calls": 1041}, {"name": "Robotics Research Ops", "status": "explored", "description": "Research-heavy sessions around robotics, interview prep, forum discussion capture, and turning noisy public commentary into structured insight.", "summary": "Research-heavy sessions around robotics, interview prep, forum discussion capture, and turning noisy public commentary into structured insight.", "tags": ["robotics", "user research", "market sensing"], "total_sessions": 8, "total_turns": 1037, "total_tool_calls": 1273}, {"name": "算力冗余 Content System", "status": "in progress", "description": "An editorial operating system for公众号内容 production, revision, and AI-assisted writing with tighter taste control.", "summary": "An editorial operating system for公众号内容 production, revision, and AI-assisted writing with tighter taste control.", "tags": ["content system", "editorial workflow", "AI writing"], "total_sessions": 10, "total_turns": 916, "total_tool_calls": 363}, {"name": "Claude Research Desk", "status": "in progress", "description": "A research-heavy lane dominated by Claude Code sessions, used for web search, synthesis, and deeper information gathering.", "summary": "A research-heavy lane dominated by Claude Code sessions, used for web search, synthesis, and deeper information gathering.", "tags": ["web research", "deep dives", "strategy"], "total_sessions": 12, "total_turns": 851, "total_tool_calls": 311}, {"name": "Agent Environment Setup", "status": "shipped", "description": "Early setup sessions focused on installing, wiring, and validating the local AI agent environment.", "summary": "Early setup sessions focused on installing, wiring, and validating the local AI agent environment.", "tags": ["toolchain", "environment setup", "agent stack"], "total_sessions": 4, "total_turns": 709, "total_tool_calls": 668}, {"name": "GTM Canvas", "status": "in progress", "description": "A structured product-building arc around a GTM AI assistant, combining product definition, screen generation, and multi-agent coordination.", "summary": "A structured product-building arc around a GTM AI assistant, combining product definition, screen generation, and multi-agent coordination.", "tags": ["GTM", "product design", "agent orchestration"], "total_sessions": 11, "total_turns": 468, "total_tool_calls": 482}, {"name": "目澈 Partner Search", "status": "explored", "description": "Longer-context work around understanding the 目澈 project and shaping founder or partner search strategy.", "summary": "Longer-context work around understanding the 目澈 project and shaping founder or partner search strategy.", "tags": ["healthtech", "partner search", "research"], "total_sessions": 8, "total_turns": 629, "total_tool_calls": 317}], "style": {"style_label": "Terminal-native operator", "style_sub": "Builds by moving between shell execution, product shaping, and research rather than staying inside one chat-only loop.", "prompt_type_label": "Operator", "prompt_type_desc": "Most sessions start from a concrete task, workspace, or artifact instead of open-ended conversation.", "rhythm_label": "Morning compounding", "tool_pref_label": "Commander", "loyalty_label": "Multi-agent split", "loyalty_desc": "Codex handles fast execution while Claude Code carries a research-heavy second lane.", "command_ratio": 0.8798064680417622, "tool_totals": {"Bash": 2826, "write_stdin": 629, "_send_email": 85, "set_value": 57, "spawn_agent": 46, "WebFetch": 167, "WebSearch": 103, "Read": 7, "Agent": 7}, "session_length_distribution": {"short": 28, "medium": 23, "long": 19}}, "heatmap": {"2026-03-02": 256, "2026-03-08": 31, "2026-03-12": 131, "2026-03-14": 443, "2026-03-16": 278, "2026-03-17": 250, "2026-03-20": 392, "2026-03-22": 28, "2026-03-25": 439, "2026-03-26": 474, "2026-03-27": 81, "2026-03-28": 347, "2026-03-29": 145, "2026-03-30": 23, "2026-03-31": 384, "2026-04-15": 388, "2026-04-18": 109, "2026-04-20": 290, "2026-04-21": 888, "2026-04-22": 307}, "highlights": {"biggest_session": {"id": "7573f220-4e44-4bfc-85e2-dfef4676168f", "turns": 490, "tool_calls": 186, "display": "/clear"}, "busiest_day": {"date": "2026-04-21", "sessions": 13, "turns": 1277}, "longest_streak": 12, "current_streak": 8, "marathon_session": {"id": "019d4221-7991-7103-aa29-a05413d4f660", "duration_seconds": 1813119, "display": "我用代码写了一个前端的PPT，我希望你转成本地版的PTT版本\n"}, "favorite_prompt": "cd /Users/tianxiang/claudecode/palyer"}, "scan_audit": {"scanner_version": "0.8.5", "days": 0, "cutoff": "1970-01-01T00:00:00+00:00", "started_at": "2026-04-22T02:09:13.600527+00:00", "requested_roots": {"claude": "/Users/tianxiang/.claude", "codex": "/Users/tianxiang/.codex", "trae": "~/Library/Application Support/Trae", "cursor": "~/Library/Application Support/Cursor", "antigravity": "~/.antigravity_tools", "gemini_antigravity": "~/.gemini/antigravity", "kiro": "~/.kiro", "windsurf": "~/.windsurf", "openclaw": "~/.openclaw", "import": ""}, "agent_sources_found": {"claude-code": 19, "codex": 102}, "agents": {"claude-code": {"sources_discovered": 19, "sources_parsed": 19, "sessions_parsed": 12, "partial_sessions": 0, "strong_sources": 19, "weak_sources": 0, "source_samples": ["~/.claude/projects/-Users-tianxiang/7573f220-4e44-4bfc-85e2-dfef4676168f.jsonl", "~/.claude/projects/-Users-tianxiang/2e6a4145-74ba-42fc-be84-b74c5dc0512d.jsonl", "~/.claude/projects/-Users-tianxiang/0d2fad8a-bf17-4599-b6e6-9e89d1ad5133.jsonl", "~/.claude/projects/-Users-tianxiang/14a4d6ab-28ad-4d5a-a1fe-fb8395a2a369.jsonl", "~/.claude/projects/-Users-tianxiang/db0ea8f1-630d-4658-bb91-b032b05c772e.jsonl"], "warnings": []}, "codex": {"sources_discovered": 102, "sources_parsed": 102, "sessions_parsed": 58, "partial_sessions": 0, "strong_sources": 102, "weak_sources": 0, "source_samples": ["~/.codex/sessions/2026/03/02/rollout-2026-03-02T11-27-47-019cac96-7688-73c3-b8fd-fe0595170e33.jsonl", "~/.codex/sessions/2026/03/02/rollout-2026-03-02T21-43-06-019caec9-cbf1-7c81-aabc-e22429072db3.jsonl", "~/.codex/sessions/2026/03/02/rollout-2026-03-02T11-51-44-019cacac-61af-7f01-9b82-5630ad8deab7.jsonl", "~/.codex/sessions/2026/03/20/rollout-2026-03-20T20-07-16-019d0b24-85c6-7611-ab43-4e5a709573e0.jsonl", "~/.codex/sessions/2026/03/20/rollout-2026-03-20T17-16-12-019d0a87-eaab-7101-8854-11d8d5d870ac.jsonl"], "warnings": ["Unparsed candidate source: ~/Library/Application Support/Codex/sentry/session.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/scope_v3.json (unrecognized JSON schema)"]}, "imported": {"sources_discovered": 0, "sources_parsed": 0, "sessions_parsed": 0, "partial_sessions": 0, "strong_sources": 0, "weak_sources": 0, "source_samples": [], "warnings": ["Unparsed candidate source: ~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite (unrecognized SQLite schema)", "Unparsed candidate source: ~/Library/Application Support/Cola/sentry/session.json (unrecognized JSON schema)"]}}, "warnings": ["Unparsed candidate source: ~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite (unrecognized SQLite schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/session.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/scope_v3.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Cola/sentry/session.json (unrecognized JSON schema)"], "unknown_sources": [{"path": "~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite", "reason": "unrecognized SQLite schema", "probe_hint": "sqlite-unrecognized", "agent_hint": "imported"}, {"path": "~/Library/Application Support/Codex/sentry/session.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "codex"}, {"path": "~/Library/Application Support/Codex/sentry/scope_v3.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "codex"}, {"path": "~/Library/Application Support/Cola/sentry/session.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "imported"}], "skipped_sources": [], "summary": {"status": "partial", "confidence": 1.0, "sessions_parsed": 70, "sources_discovered": 121, "sources_parsed": 121, "partial_sessions": 0, "unknown_sources": 4, "skipped_sources": 0, "agents_found": ["claude-code", "codex"], "recommended_action": "Re-run BuilderBio with the latest skill if you used agents that are missing from the badges or if the audit lists unknown sources."}}};
+const E = {"tech": {"Shell / CLI": 100, "Product Strategy": 39, "AI Agent Ecosystem": 32, "Content Processing": 18, "Claude Code Skills": 14, "Web Research": 10, "MCP Integrations": 6, "HTML / CSS": 6, "Code Reading": 0, "Code Generation": 0}, "evolution": [{"week": "2026-03-02", "sessions": 4, "turns": 287, "tool_calls": 181, "avg_turns": 72}, {"week": "2026-03-09", "sessions": 3, "turns": 574, "tool_calls": 475, "avg_turns": 191}, {"week": "2026-03-16", "sessions": 8, "turns": 948, "tool_calls": 790, "avg_turns": 118}, {"week": "2026-03-23", "sessions": 34, "turns": 1486, "tool_calls": 1191, "avg_turns": 44}, {"week": "2026-03-30", "sessions": 3, "turns": 407, "tool_calls": 643, "avg_turns": 136}, {"week": "2026-04-13", "sessions": 3, "turns": 497, "tool_calls": 296, "avg_turns": 166}, {"week": "2026-04-20", "sessions": 15, "turns": 1485, "tool_calls": 879, "avg_turns": 99}], "evolution_insight": "The history starts with environment setup and exploratory product work, then compounds into structured product-building, research operations, and finally a clear two-agent operating model.", "time": {"hour_distribution": {"0": 1, "1": 6, "2": 15, "3": 11, "4": 6, "5": 2, "6": 3, "7": 15, "8": 12, "9": 10, "10": 9, "11": 8, "12": 6, "13": 6, "14": 7, "15": 2, "16": 1, "17": 1, "18": 1, "19": 1, "20": 1, "21": 1, "22": 1, "23": 1}, "period_data": {"deep_night": {"sessions": 41, "turns": 1723}, "morning": {"sessions": 57, "turns": 2870}, "afternoon": {"sessions": 23, "turns": 1067}, "evening": {"sessions": 6, "turns": 25}}, "builder_type": "上午型 Builder", "peak_hour": 2, "peak_window": "06:00-12:00", "peak_text": "06:00-12:00", "peak_detail": "Peak around 02:00"}, "keywords": [["GTM", 10], ["game", 7], ["product", 6], ["perspective", 6], ["WeChat", 6], ["mini", 6], ["Review", 6], ["claude", 5], ["codex", 5], ["user", 4], ["Users", 4], ["tianxiang", 4], ["PPT", 4], ["Agent", 4], ["PRD", 4], ["openclaw", 4], ["code", 3], ["Files", 3], ["mentioned", 3], ["skill", 3], ["generated", 3], ["gtm", 3], ["canvas", 3], ["spec", 3], ["review", 3], ["Assistant", 3], ["Research", 3], ["design", 3], ["breakout", 3], ["poker", 3]], "comparison": {"claude-code": {"sessions": 12, "total_turns": 1140, "total_tool_calls": 373, "avg_turns": 95, "top_tools": [["WebFetch", 167], ["WebSearch", 103], ["Bash", 75], ["Read", 7], ["Agent", 7]], "distribution": {"short": 4, "medium": 5, "long": 3}}, "codex": {"sessions": 58, "total_turns": 4544, "total_tool_calls": 4082, "avg_turns": 78, "top_tools": [["Bash", 2751], ["write_stdin", 629], ["_send_email", 85], ["set_value", 57], ["spawn_agent", 46]], "distribution": {"short": 24, "medium": 18, "long": 16}}}, "comparison_insight": "Codex is the execution surface: shell-heavy, tool-dense, and spread across more workspaces. Claude Code arrives later as a higher-context lane for research, web retrieval, and long-form synthesis.", "scan_audit": {"scanner_version": "0.8.5", "days": 0, "cutoff": "1970-01-01T00:00:00+00:00", "started_at": "2026-04-22T02:09:13.600527+00:00", "requested_roots": {"claude": "/Users/tianxiang/.claude", "codex": "/Users/tianxiang/.codex", "trae": "~/Library/Application Support/Trae", "cursor": "~/Library/Application Support/Cursor", "antigravity": "~/.antigravity_tools", "gemini_antigravity": "~/.gemini/antigravity", "kiro": "~/.kiro", "windsurf": "~/.windsurf", "openclaw": "~/.openclaw", "import": ""}, "agent_sources_found": {"claude-code": 19, "codex": 102}, "agents": {"claude-code": {"sources_discovered": 19, "sources_parsed": 19, "sessions_parsed": 12, "partial_sessions": 0, "strong_sources": 19, "weak_sources": 0, "source_samples": ["~/.claude/projects/-Users-tianxiang/7573f220-4e44-4bfc-85e2-dfef4676168f.jsonl", "~/.claude/projects/-Users-tianxiang/2e6a4145-74ba-42fc-be84-b74c5dc0512d.jsonl", "~/.claude/projects/-Users-tianxiang/0d2fad8a-bf17-4599-b6e6-9e89d1ad5133.jsonl", "~/.claude/projects/-Users-tianxiang/14a4d6ab-28ad-4d5a-a1fe-fb8395a2a369.jsonl", "~/.claude/projects/-Users-tianxiang/db0ea8f1-630d-4658-bb91-b032b05c772e.jsonl"], "warnings": []}, "codex": {"sources_discovered": 102, "sources_parsed": 102, "sessions_parsed": 58, "partial_sessions": 0, "strong_sources": 102, "weak_sources": 0, "source_samples": ["~/.codex/sessions/2026/03/02/rollout-2026-03-02T11-27-47-019cac96-7688-73c3-b8fd-fe0595170e33.jsonl", "~/.codex/sessions/2026/03/02/rollout-2026-03-02T21-43-06-019caec9-cbf1-7c81-aabc-e22429072db3.jsonl", "~/.codex/sessions/2026/03/02/rollout-2026-03-02T11-51-44-019cacac-61af-7f01-9b82-5630ad8deab7.jsonl", "~/.codex/sessions/2026/03/20/rollout-2026-03-20T20-07-16-019d0b24-85c6-7611-ab43-4e5a709573e0.jsonl", "~/.codex/sessions/2026/03/20/rollout-2026-03-20T17-16-12-019d0a87-eaab-7101-8854-11d8d5d870ac.jsonl"], "warnings": ["Unparsed candidate source: ~/Library/Application Support/Codex/sentry/session.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/scope_v3.json (unrecognized JSON schema)"]}, "imported": {"sources_discovered": 0, "sources_parsed": 0, "sessions_parsed": 0, "partial_sessions": 0, "strong_sources": 0, "weak_sources": 0, "source_samples": [], "warnings": ["Unparsed candidate source: ~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite (unrecognized SQLite schema)", "Unparsed candidate source: ~/Library/Application Support/Cola/sentry/session.json (unrecognized JSON schema)"]}}, "warnings": ["Unparsed candidate source: ~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite (unrecognized SQLite schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/session.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Codex/sentry/scope_v3.json (unrecognized JSON schema)", "Unparsed candidate source: ~/Library/Application Support/Cola/sentry/session.json (unrecognized JSON schema)"], "unknown_sources": [{"path": "~/Library/Application Support/com.apple.RemoteManagementAgent/Database/RemoteManagement.sqlite", "reason": "unrecognized SQLite schema", "probe_hint": "sqlite-unrecognized", "agent_hint": "imported"}, {"path": "~/Library/Application Support/Codex/sentry/session.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "codex"}, {"path": "~/Library/Application Support/Codex/sentry/scope_v3.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "codex"}, {"path": "~/Library/Application Support/Cola/sentry/session.json", "reason": "unrecognized JSON schema", "probe_hint": "json-unrecognized", "agent_hint": "imported"}], "skipped_sources": [], "summary": {"status": "partial", "confidence": 1.0, "sessions_parsed": 70, "sources_discovered": 121, "sources_parsed": 121, "partial_sessions": 0, "unknown_sources": 4, "skipped_sources": 0, "agents_found": ["claude-code", "codex"], "recommended_action": "Re-run BuilderBio with the latest skill if you used agents that are missing from the badges or if the audit lists unknown sources."}}};
+const UNFILTERED = false;
+const GEN_TIME = "2026-04-22 10:10";
+const TC={"Bash":"#fb923c","Read":"#60a5fa","Write":"#34d399","Edit":"#a78bfa","Grep":"#fbbf24","Glob":"#22d3ee","Task":"#f472b6","TaskUpdate":"#818cf8","TaskCreate":"#818cf8","write_stdin":"#c084fc","WebFetch":"#2dd4bf","WebSearch":"#2dd4bf","AskUserQuestion":"#f43f5e","view_image":"#f472b6","shell_command":"#fb923c","update_plan":"#818cf8","EnterPlanMode":"#a78bfa"};
+const TOKEN_VALUE={
+  total_usd:229.4108,
+  total_cny_est:1583,
+  fx_note:"按 1 USD ≈ 6.9 CNY 粗略换算",
+  note_zh:"按官方文本 token 单价估算，不含 Web Search、Hosted Shell、File Search 等额外工具费用。",
+  models:[
+    {model:"gpt-5.4", sessions:38, cost_usd:213.630036},
+    {model:"gpt-5.4-mini", sessions:17, cost_usd:6.6152238},
+    {model:"gpt-5.3-codex", sessions:3, cost_usd:8.7162068},
+    {model:"MiniMax-M2.7", sessions:12, cost_usd:0.449284905}
+  ]
+};
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function fN(n){if(!n)return'0';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toString()}
+function hideSection(name){
+  const section=document.getElementById('section-'+name);
+  const divider=document.getElementById('divider-after-'+name);
+  if(section)section.style.display='none';
+  if(divider)divider.style.display='none';
+}
+function hasEntries(v){
+  if(Array.isArray(v))return v.length>0;
+  if(v&&typeof v==='object')return Object.keys(v).length>0;
+  return !!v;
+}
+function humanizeId(v){
+  return String(v||'').split(/[-_]+/).filter(Boolean).map(function(part){
+    const low=part.toLowerCase();
+    const specials={ai:'AI',api:'API',cli:'CLI',ux:'UX',ui:'UI',mcp:'MCP',saas:'SaaS',devops:'DevOps',html:'HTML',css:'CSS',sql:'SQL'};
+    if(specials[low])return specials[low];
+    return low.charAt(0).toUpperCase()+low.slice(1);
+  }).join(' ');
+}
+function uniq(values){
+  const seen={};return(values||[]).filter(function(v){
+    const clean=String(v||'').trim();if(!clean)return false;
+    const key=clean.toLowerCase();if(seen[key])return false;seen[key]=1;return true;
+  });
+}
+function agentLabel(agent,stats){
+  const explicit=stats&&stats.display_name;
+  if(explicit)return explicit;
+  const labels={'claude-code':'Claude Code','codex':'Codex','openclaw':'OpenClaw','cursor':'Cursor','windsurf':'Windsurf','trae':'Trae','trae-cn':'Trae','claude':'Claude'};
+  return labels[agent]||humanizeId(agent);
+}
+function agentColor(agent,i){
+  const colors={'claude-code':'var(--ac)','codex':'var(--g)','openclaw':'var(--p)','cursor':'var(--y)','trae':'var(--o)','windsurf':'var(--b)'};
+  const fallbacks=['var(--ac)','var(--g)','var(--y)','var(--b)','var(--p)','var(--o)','var(--pk)'];
+  return colors[agent]||fallbacks[i%fallbacks.length];
+}
+function topTechEntries(){
+  return Object.entries(E.tech||{}).sort(function(a,b){return (b[1]||0)-(a[1]||0);});
+}
+function projectScore(p){
+  return (Number(p.total_turns)||0)*1.5+(Number(p.total_tool_calls)||0)+(Number(p.total_sessions)||0)*45;
+}
+function pickSignatureProject(){
+  if(!Array.isArray(D.projects)||!D.projects.length)return null;
+  return D.projects.slice().sort(function(a,b){return projectScore(b)-projectScore(a);})[0]||null;
+}
+function getBuilderThesis(){
+  const p=D.profile||{};
+  if(p.summary)return p.summary;
+  const sig=pickSignatureProject();
+  const topTech=topTechEntries().slice(0,2).map(function(entry){return entry[0];});
+  if(sig&&topTech.length){
+    return LANG==='zh'
+      ? (p.display_name||'这位 Builder')+' 会把 '+topTech.join(' + ')+' 直接推进成可交付结果，而“'+sig.name+'”是最清楚的一条证据。'
+      : (p.display_name||'This builder')+' keeps turning '+topTech.join(' + ')+' into shippable work, with "'+sig.name+'" as the clearest proof.';
+  }
+  if(sig){
+    return LANG==='zh'
+      ? (p.display_name||'这位 Builder')+' 会反复回到“'+sig.name+'”这条主线，它最能代表其构建品味。'
+      : (p.display_name||'This builder')+' keeps coming back to "'+sig.name+'" as the strongest expression of their build taste.';
+  }
+  return LANG==='zh'
+    ? (p.display_name||'这位 Builder')+' 的日志更像持续推进中的工作现场，而不是停留在浅层尝试。'
+    : (p.display_name||'This builder')+' has a log full of AI-assisted work that leans more toward shipping than passive experimentation.';
+}
+function getTasteSignals(){
+  const p=D.profile||{};
+  const st=D.style||{};
+  const signals=[];
+  if(st.style_label)signals.push(st.style_label);
+  if(E.time&&E.time.peak_text)signals.push(E.time.peak_text);
+  topTechEntries().slice(0,3).forEach(function(entry){signals.push(entry[0]);});
+  const agents=Object.keys(p.agents_used||{});
+  if(agents.length>1)signals.push(agents.map(function(agent){return agentLabel(agent,(E.comparison||{})[agent]);}).join(' + '));
+  else if(agents.length===1)signals.push(agentLabel(agents[0],(E.comparison||{})[agents[0]]));
+  const commandRatio=Number(st.command_ratio)||0;
+  if(commandRatio>=0.45)signals.push(LANG==='zh'?'终端密集':'terminal-heavy');
+  else if(commandRatio>=0.25)signals.push(LANG==='zh'?'CLI 优先':'CLI-first');
+  if(Array.isArray(D.projects)&&D.projects.length>=4)signals.push(LANG==='zh'?'多项目并行':'multi-project');
+  return uniq(signals).slice(0,6);
+}
+function getCollaborationScale(){
+  const p=D.profile||{};
+  const agents=Object.keys(p.agents_used||{});
+  const projects=Array.isArray(D.projects)?D.projects.length:0;
+  return {
+    value:fN(p.total_tokens||0),
+    copy:LANG==='zh'
+      ? (p.total_tokens?fN(p.total_tokens)+' tokens 被记录':'Token 数据缺失')+'，分布在 '+fN(p.total_sessions||0)+' 次会话中'+(p.date_range&&p.date_range.start&&p.date_range.end?' · '+p.date_range.start+' — '+p.date_range.end:'')+'。'
+      : (p.total_tokens?fN(p.total_tokens)+' tokens logged':'Token volume unavailable')+' across '+fN(p.total_sessions||0)+' sessions'+(p.date_range&&p.date_range.start&&p.date_range.end?' · '+p.date_range.start+' → '+p.date_range.end:'')+'.',
+    stats:[
+      {value:fN(p.total_sessions||0),label:LANG==='zh'?'会话数':'Sessions'},
+      {value:fN(p.total_turns||0),label:LANG==='zh'?'对话轮次':'Turns'},
+      {value:String(projects),label:LANG==='zh'?'项目数':'Projects'},
+      {value:String(agents.length||0),label:LANG==='zh'?'Agent 数':'Agents'},
+    ]
+  };
+}
+function deriveManagementStyle(){
+  const st=D.style||{};
+  const p=D.profile||{};
+  const label=st.style_label||[st.prompt_type_label||st.prompt_type,st.rhythm_label||st.session_rhythm].filter(Boolean).join(' × ')||'Builder operating model';
+  const summary=st.style_sub||E.comparison_insight||E.evolution_insight||getBuilderThesis();
+  const commandRatio=Math.round((Number(st.command_ratio)||0)*100);
+  const traits=[];
+  if(st.prompt_type_desc)traits.push(st.prompt_type_desc);
+  if(commandRatio>=25)traits.push(LANG==='zh'?commandRatio+'% 的记录工具调用都走在终端链路上。':commandRatio+'% of recorded tool usage runs through terminal-style tools.');
+  if(Object.keys(p.agents_used||{}).length>1)traits.push(LANG==='zh'?'不同 Agent 承担的是不同工种，而不是被强行拉去做同一份工作。':'Different agents handle different parts of the workflow instead of being forced into the same job.');
+  if(E.time&&E.time.peak_detail)traits.push(E.time.peak_detail);
+  if(!traits.length&&st.loyalty_desc)traits.push(st.loyalty_desc);
+  return {label:label,summary:summary,traits:uniq(traits).slice(0,3)};
+}
+function deriveAgentRoles(){
+  const cmp=E.comparison||{};
+  return Object.entries(cmp).sort(function(a,b){return (b[1].total_turns||0)-(a[1].total_turns||0);}).map(function(entry,i){
+    const agent=entry[0];const data=entry[1]||{};
+    const avg=Number(data.avg_turns)||0;const sessions=Number(data.sessions)||0;const turns=Number(data.total_turns)||0;const tools=Number(data.total_tool_calls)||0;
+    let role=LANG==='zh'?'核心 Builder':'Core builder';let summary=LANG==='zh'?'承担了日常推进和重复构建回路里的主体工作。':'Carries the bulk of day-to-day delivery and repeated build loops.';
+    if(avg>=100){role=LANG==='zh'?'深度工作':'Deep work';summary=LANG==='zh'?'更适合长上下文、重构和需要持续待在同一线程里的工作。':'Shows up when the work needs longer context, harder restructuring, and time to stay inside one thread.';}
+    else if(sessions>=40&&tools>=turns){role=LANG==='zh'?'快速执行':'Fast execution';summary=LANG==='zh'?'更擅长高工具密度执行、快速迭代和维持推进速度。':'Best for tool-heavy execution, quick iteration, and keeping momentum high.';}
+    else if(sessions>=40){role=LANG==='zh'?'迭代回路':'Iteration loop';summary=LANG==='zh'?'频繁回到同类任务中做跟进、清理和短回路推进。':'Returns often for follow-ups, cleanup, and short-loop shipping.';}
+    else if(tools>=turns){role=LANG==='zh'?'执行偏重':'Execution-heavy';summary=LANG==='zh'?'更偏命令、编辑和外部动作，而不是长时间持有纯对话上下文。':'Used more for commands and edits than for holding long conversational context.';}
+    const topTool=Array.isArray(data.top_tools)&&data.top_tools[0]?data.top_tools[0][0]:'';
+    return{
+      name:agentLabel(agent,data),
+      role:role,
+      summary:summary,
+      evidence:LANG==='zh'
+        ? fN(sessions)+' 次会话 · '+fN(turns)+' 轮对话 · '+fN(tools)+' 次工具调用'+(topTool?' · 高频工具 '+topTool:'')
+        : fN(sessions)+' sessions · '+fN(turns)+' turns · '+fN(tools)+' tool calls'+(topTool?' · top tool '+topTool:''),
+      color:agentColor(agent,i)
+    };
+  }).slice(0,4);
+}
+function deriveSignatureMoves(){
+  const st=D.style||{};const p=D.profile||{};const sig=pickSignatureProject();
+  const commandRatio=Math.round((Number(st.command_ratio)||0)*100);
+  const moves=[];
+  if(commandRatio>=25)moves.push({title:LANG==='zh'?'把推进留在终端':'Keeps the loop in the terminal',text:LANG==='zh'?commandRatio+'% 的记录工具调用都走在 Bash、shell 或 stdin 驱动的执行链路上。':commandRatio+'% of recorded tool usage runs through Bash, shell commands, or stdin-driven execution.',proof:LANG==='zh'?'工具分布':'Tool distribution'});
+  if(Object.keys(p.agents_used||{}).length>1)moves.push({title:LANG==='zh'?'按角色拆分 Agent':'Splits agents by role',text:LANG==='zh'?'不同 Agent 负责不同环节，不会被拉去做完全同一种工作。':'Different agents handle different parts of the workflow instead of competing for the exact same job.',proof:LANG==='zh'?'Agent 对照':'Agent comparison'});
+  if(sig)moves.push({title:LANG==='zh'?'反复回到主线项目':'Returns to a flagship build',text:LANG==='zh'?'“'+sig.name+'”承接了最多的注意力、对话轮次和工具动作，是这段历史里最稳定的主线。':'"'+sig.name+'" is where the biggest share of turns, tools, and attention keeps coming back together.',proof:(sig.tags||[]).slice(0,3).join(' · ')||(LANG==='zh'?'项目聚类':'Project clustering')});
+  const techLabels=topTechEntries().slice(0,3).map(function(entry){return entry[0];});
+  if(techLabels.some(function(label){return /(product|research|strategy|content)/i.test(label);})){
+    moves.push({title:LANG==='zh'?'把思考变成产物':'Turns thinking into artifacts',text:LANG==='zh'?'研究、产品判断和执行动作出现在同一条构建历史里，而不是分散在互不相连的工具中。':'Research, product shaping, and execution show up inside the same build history instead of living in separate tools.',proof:techLabels.join(' · ')});
+  }
+  if(E.time&&E.time.peak_text)moves.push({title:LANG==='zh'?'有明显的时间节奏':'Builds around a recognizable rhythm',text:LANG==='zh'?'活跃时间分布已经足够稳定，连工作时段本身都成了个人风格的一部分。':'The activity pattern is distinct enough that the working hours themselves become part of the profile.',proof:E.time.peak_text});
+  return moves.slice(0,4);
+}
+function buildSignatureProofs(project){
+  const proofs=[];
+  if(project.total_turns)proofs.push(LANG==='zh'?fN(project.total_turns)+' 轮对话集中在这条主线':fN(project.total_turns)+' turns clustered around this build');
+  if(project.total_tool_calls)proofs.push(LANG==='zh'?fN(project.total_tool_calls)+' 次工具动作为它服务':fN(project.total_tool_calls)+' tool calls supporting it');
+  if(project.total_sessions)proofs.push(LANG==='zh'?fN(project.total_sessions)+' 次会话直接触达该项目':fN(project.total_sessions)+' sessions touched this project');
+  if(Array.isArray(project.tags)&&project.tags.length)proofs.push(LANG==='zh'?'核心标签：'+project.tags.slice(0,3).join(' · '):'Core tags: '+project.tags.slice(0,3).join(' · '));
+  return proofs.slice(0,3);
+}
+
+// === SAFE SECTION RUNNER ===
+function safeRun(name,fn){try{fn()}catch(e){console.warn('BuilderBio: section "'+name+'" skipped:',e.message)}}
+
+// === DATA NORMALIZATION ===
+// Convert agent_badges array to agents_used object if needed
+(function(){
+  const p=D.profile||{};
+  const insights=E.insights||{};
+  const legacyAgents=Array.isArray(D.agents)?D.agents:[];
+  const agentKey=function(name){
+    return String(name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  };
+  const normalizeTopTools=function(items){
+    return (Array.isArray(items)?items:[]).map(function(t){
+      if(typeof t==='string')return[t,1];
+      if(Array.isArray(t))return[t[0]||'',Number(t[1])||0];
+      return[(t&&t.name)||'',(t&&t.count)||0];
+    }).filter(function(t){return t[0]});
+  };
+  if(!p.avatar_url&&p.avatar)p.avatar_url=p.avatar;
+  if(!p.agents_used&&p.agents&&typeof p.agents==='object'){
+    p.agents_used={};
+    Object.entries(p.agents).forEach(function([agent,stats]){
+      stats=stats||{};
+      p.agents_used[agent]={sessions:stats.sessions||0,first_session:stats.first_session||''};
+    });
+  }
+  if(!p.agents_used&&p.agent_badges){
+    p.agents_used={};
+    p.agent_badges.forEach(function(b){
+      p.agents_used[b.agent]={sessions:b.sessions||0,first_session:b.first_session||''};
+    });
+  }
+  if(!p.agents_used)p.agents_used={};
+  if(Object.keys(p.agents_used).length===0&&E.agent_share&&Array.isArray(E.agent_share)){
+    E.agent_share.forEach(function(item){
+      if(item&&item.agent){
+        p.agents_used[item.agent]={sessions:item.sessions||0,first_session:''};
+      }
+    });
+  }
+  if(Object.keys(p.agents_used).length===0&&legacyAgents.length){
+    legacyAgents.forEach(function(stats){
+      stats=stats||{};
+      const agent=agentKey(stats.agent||stats.name||stats.display_name);
+      if(!agent)return;
+      p.agents_used[agent]={sessions:stats.sessions||0,first_session:stats.first_session||''};
+    });
+  }
+  if(p.social_links&&!Array.isArray(p.social_links)&&typeof p.social_links==='object'){
+    p.social_links=Object.entries(p.social_links).filter(([,url])=>typeof url==='string'&&url).map(([platform,url])=>({platform,url}));
+  }
+  if(!Array.isArray(p.social_links))p.social_links=[];
+  if(!E.scan_audit&&D.scan_audit)E.scan_audit=D.scan_audit;
+  if(!E.scan_audit&&p.scan_audit)E.scan_audit=p.scan_audit;
+  if(E.scan_audit&&typeof E.scan_audit==='object'){
+    if(!E.scan_audit.summary||typeof E.scan_audit.summary!=='object')E.scan_audit.summary={};
+    if(!Array.isArray(E.scan_audit.warnings))E.scan_audit.warnings=[];
+    if(!Array.isArray(E.scan_audit.unknown_sources))E.scan_audit.unknown_sources=[];
+    if(!E.scan_audit.agent_sources_found&&E.scan_audit.agents&&typeof E.scan_audit.agents==='object'){
+      E.scan_audit.agent_sources_found={};
+      Object.entries(E.scan_audit.agents).forEach(function([agent,stats]){
+        E.scan_audit.agent_sources_found[agent]=(stats&&stats.sources_discovered)||0;
+      });
+    }
+    if(!p.scanner_version&&E.scan_audit.scanner_version)p.scanner_version=E.scan_audit.scanner_version;
+    if(!p.scan_status&&E.scan_audit.summary.status)p.scan_status=E.scan_audit.summary.status;
+    if(!p.scan_recommendation&&E.scan_audit.summary.recommended_action)p.scan_recommendation=E.scan_audit.summary.recommended_action;
+    if(!p.agent_sources_found&&E.scan_audit.agent_sources_found)p.agent_sources_found=E.scan_audit.agent_sources_found;
+  }
+  // Ensure tech_stack.areas → E.tech object
+  if((!E.tech||typeof E.tech!=='object'||Object.keys(E.tech).length===0)&&Array.isArray(D.tech_stack)){
+    E.tech={};D.tech_stack.forEach(function(a){if(a&&a.name!=null)E.tech[a.name]=a.score||a.value||0;});
+  }
+  if((!E.tech||typeof E.tech!=='object'||Object.keys(E.tech).length===0)&&D.tech_stack&&D.tech_stack.areas){
+    E.tech={};D.tech_stack.areas.forEach(function(a){E.tech[a.name]=a.score||a.value||0;});
+  }
+  if(!E.tech)E.tech={};
+  // Ensure D.style exists
+  if(!D.style)D.style={};
+  if(!D.working_style)D.working_style={};
+  // Map working_style to style if style is empty
+  if(Object.keys(D.style).length===0&&Object.keys(D.working_style).length>0){
+    D.style=D.working_style;
+  }
+  // Ensure D.collaboration_curve → D.evolution
+  if(!D.evolution&&D.collaboration_curve){
+    D.evolution=D.collaboration_curve;
+  }
+  if((!E.evolution||!Array.isArray(E.evolution)||E.evolution.length===0)&&Array.isArray(D.evolution)){
+    E.evolution=D.evolution.map(function(e){
+      return{week:e.week||'',sessions:e.sessions||0,turns:e.turns||0,avg_turns:e.avg_turns||e.avg||0};
+    });
+  }
+  if(!E.evolution_insight&&(D.collaboration_curve&&D.collaboration_curve.description))E.evolution_insight=D.collaboration_curve.description;
+  if(!E.evolution_insight&&insights.rhythm)E.evolution_insight=insights.rhythm;
+  if((!E.keywords||!Array.isArray(E.keywords)||E.keywords.length===0)&&Array.isArray(D.keywords)){
+    E.keywords=D.keywords.map(function(k){
+      if(Array.isArray(k))return k;
+      return[k.word||'',k.count||0];
+    }).filter(function(k){return k[0]});
+  }
+  if((!E.time||typeof E.time!=='object'||Object.keys(E.time).length===0)&&(D.time||D.time_distribution)){
+    const time=D.time||D.time_distribution;
+    const hd={};
+    if(Array.isArray(time.hour_distribution)){
+      for(let i=0;i<24;i++)hd[String(i)]=time.hour_distribution[i]||0;
+    }else{
+      for(let i=0;i<24;i++)hd[String(i)]=(time.hour_distribution&&time.hour_distribution[String(i)])||0;
+    }
+    const peakHour=time.peak_hour||0;
+    E.time={
+      hour_distribution:hd,
+      period_data:time.period_data||time.periods||{},
+      builder_type:time.builder_type||'',
+      peak_hour:peakHour,
+      peak_text:(E.time_detail&&E.time_detail.peak_text)||time.peak_text||time.builder_type||insights.time_pattern||'',
+      peak_detail:(E.time_detail&&E.time_detail.peak_detail)||time.peak_detail||(insights.time_pattern&&insights.time_pattern!==time.builder_type?insights.time_pattern:'')||(peakHour?('Peak around '+peakHour+':00'):'')
+    };
+  }
+  if((!E.comparison||typeof E.comparison!=='object'||Object.keys(E.comparison).length===0)&&E.agent_comparison){
+    E.comparison={};
+    Object.entries(E.agent_comparison).forEach(function([agent,stats]){
+      stats=stats||{};
+      E.comparison[agent]={
+        sessions:stats.sessions||0,
+        total_turns:stats.total_turns||stats.turns||0,
+        avg_turns:stats.avg_turns||0,
+        total_tool_calls:stats.total_tool_calls||stats.tool_calls||0,
+        top_tools:(stats.top_tools||[]).map(function(t){
+          if(typeof t==='string')return[t,1];
+          if(Array.isArray(t))return t;
+          return[t.name||'',t.count||0];
+        }).filter(function(t){return t[0]}),
+        distribution:stats.distribution||stats.length_dist||{short:0,medium:0,long:0}
+      };
+    });
+  }
+  if((!E.comparison||typeof E.comparison!=='object'||Object.keys(E.comparison).length===0)&&legacyAgents.length){
+    E.comparison={};
+    legacyAgents.forEach(function(stats){
+      stats=stats||{};
+      const agent=agentKey(stats.agent||stats.name||stats.display_name);
+      if(!agent)return;
+      E.comparison[agent]={
+        sessions:stats.sessions||0,
+        total_turns:stats.total_turns||stats.turns||0,
+        avg_turns:stats.avg_turns||0,
+        total_tool_calls:stats.total_tool_calls||stats.tool_calls||0,
+        top_tools:normalizeTopTools(stats.top_tools),
+        distribution:stats.distribution||stats.length_dist||{short:0,medium:0,long:0}
+      };
+    });
+  }
+  if((!E.comparison||typeof E.comparison!=='object'||Object.keys(E.comparison).length===0)&&Array.isArray(D.agent_comparison)){
+    E.comparison={};
+    D.agent_comparison.forEach(function(stats){
+      stats=stats||{};
+      const agent=agentKey(stats.name);
+      if(!agent)return;
+      E.comparison[agent]={
+        sessions:stats.sessions||0,
+        total_turns:stats.total_turns||stats.turns||0,
+        avg_turns:stats.avg_turns||0,
+        total_tool_calls:stats.total_tool_calls||stats.tool_calls||0,
+        top_tools:(stats.top_tools||[]).map(function(t){
+          if(typeof t==='string')return[t,1];
+          if(Array.isArray(t))return t;
+          return[t.name||'',t.count||0];
+        }).filter(function(t){return t[0]}),
+        distribution:stats.distribution||stats.length_dist||{short:0,medium:0,long:0}
+      };
+    });
+  }
+  if(!E.comparison_insight&&insights.agent_comparison)E.comparison_insight=insights.agent_comparison;
+  // Ensure D.time_distribution exists
+  if(!D.time_distribution)D.time_distribution={};
+  // Ensure D.keywords from top-level
+  if(!D.keywords)D.keywords=[];
+  // Ensure D.highlights exists
+  if(!D.highlights)D.highlights={};
+  if((!D.highlights.biggest_session||!D.highlights.busiest_day)&&E.highlights&&typeof E.highlights==='object'){
+    if(!D.highlights.biggest_session&&E.highlights.biggest_session)D.highlights.biggest_session=E.highlights.biggest_session;
+    if(!D.highlights.busiest_day&&E.highlights.busiest_day)D.highlights.busiest_day=E.highlights.busiest_day;
+    if(D.highlights.longest_streak==null&&E.highlights.longest_streak!=null)D.highlights.longest_streak=E.highlights.longest_streak;
+    if(D.highlights.current_streak==null&&E.highlights.current_streak!=null)D.highlights.current_streak=E.highlights.current_streak;
+  }
+  if(!D.highlights.favorite_prompt&&E.featured_prompt&&E.featured_prompt.content){
+    D.highlights.favorite_prompt=E.featured_prompt.content;
+  }
+  if(!D.highlights.favorite_prompt&&E.highlights&&E.highlights.featured_prompt){
+    D.highlights.favorite_prompt=E.highlights.featured_prompt;
+  }
+  if(D.highlights.biggest_session&&!D.highlights.biggest_session.display&&D.highlights.biggest_session.project){
+    D.highlights.biggest_session.display=D.highlights.biggest_session.project;
+  }
+  if(D.highlights.biggest_session&&!D.highlights.biggest_session.display&&D.highlights.biggest_session.date){
+    D.highlights.biggest_session.display=D.highlights.biggest_session.duration_hours?`${D.highlights.biggest_session.date} · ${D.highlights.biggest_session.duration_hours}h session`:`Session on ${D.highlights.biggest_session.date}`;
+  }
+  // Ensure project tags fallback to tech_tags
+  if(D.projects){
+    D.projects.forEach(function(p){
+      if(!p.tags&&p.tech_stack)p.tags=p.tech_stack;
+      if(!p.tags&&p.tech_tags)p.tags=p.tech_tags;
+      if(typeof p.total_sessions!=='number'){
+        if(Array.isArray(p.sessions))p.total_sessions=p.sessions.length;
+        else if(typeof p.sessions==='number')p.total_sessions=p.sessions;
+        else if(typeof p.session_count==='number')p.total_sessions=p.session_count;
+        else p.total_sessions=0;
+      }
+      if(typeof p.total_turns!=='number'&&typeof p.turns==='number')p.total_turns=p.turns;
+      if(typeof p.total_tool_calls!=='number'&&typeof p.tool_calls==='number')p.total_tool_calls=p.tool_calls;
+      if(p.status==='in-progress')p.status='in progress';
+      if(!p.sessions)p.sessions=[];
+    });
+  }
+  if(Object.keys(p.agents_used).length===0&&E.comparison&&typeof E.comparison==='object'){
+    Object.entries(E.comparison).forEach(function([agent,stats]){
+      p.agents_used[agent]={sessions:(stats&&stats.sessions)||0,first_session:(stats&&stats.first_session)||''};
+    });
+  }
+  if(!D.style.prompt_type&&D.working_style.prompt_style)D.style.prompt_type=D.working_style.prompt_style;
+  if(!D.style.session_rhythm&&D.working_style.session_rhythm)D.style.session_rhythm=D.working_style.session_rhythm;
+  if(!D.style.tool_preference&&D.working_style.tool_preference)D.style.tool_preference=D.working_style.tool_preference;
+  if(!D.style.agent_loyalty&&D.working_style.agent_loyalty)D.style.agent_loyalty=D.working_style.agent_loyalty;
+  if((!D.style.tool_totals||Object.keys(D.style.tool_totals).length===0)&&E.comparison&&typeof E.comparison==='object'){
+    D.style.tool_totals={};
+    Object.values(E.comparison).forEach(function(stats){
+      normalizeTopTools((stats&&stats.top_tools)||[]).forEach(function(t){
+        D.style.tool_totals[t[0]]=(D.style.tool_totals[t[0]]||0)+(t[1]||0);
+      });
+    });
+  }
+  if((!D.style.session_length_distribution||Object.keys(D.style.session_length_distribution).length===0)&&E.comparison&&typeof E.comparison==='object'){
+    const dist={short:0,medium:0,long:0};
+    Object.values(E.comparison).forEach(function(stats){
+      const d=(stats&&stats.distribution)||{};
+      dist.short+=(d.short||0);
+      dist.medium+=(d.medium||0);
+      dist.long+=(d.long||0);
+    });
+    D.style.session_length_distribution=dist;
+  }
+  if(!D.style.style_label&&(D.style.prompt_type||D.style.session_rhythm)){
+    D.style.style_label=[D.style.prompt_type,D.style.session_rhythm].filter(Boolean).join(' × ');
+  }
+  if(!D.style.prompt_type_label&&D.style.prompt_type)D.style.prompt_type_label=D.style.prompt_type;
+  if(!D.style.rhythm_label&&D.style.session_rhythm)D.style.rhythm_label=D.style.session_rhythm;
+  if(!D.style.tool_pref_label&&D.style.tool_preference)D.style.tool_pref_label=D.style.tool_preference;
+  if(!D.style.loyalty_label&&D.style.agent_loyalty)D.style.loyalty_label=D.style.agent_loyalty;
+  if(!D.style.style_sub&&(D.style.rhythm_desc||D.style.tool_pref_desc))D.style.style_sub=D.style.rhythm_desc||D.style.tool_pref_desc;
+  if(!D.style.style_sub&&(insights.prompt_style||insights.rhythm))D.style.style_sub=insights.prompt_style||insights.rhythm;
+  if(!D.style.loyalty_desc&&insights.agent_comparison)D.style.loyalty_desc=insights.agent_comparison;
+  if((D.style.command_ratio==null||D.style.command_ratio==='')&&D.style.tool_totals){
+    const totalTools=Object.values(D.style.tool_totals).reduce(function(sum,v){return sum+(Number(v)||0);},0);
+    const shellTools=(Number(D.style.tool_totals.Bash)||0)+(Number(D.style.tool_totals.shell_command)||0)+(Number(D.style.tool_totals.write_stdin)||0);
+    D.style.command_ratio=totalTools?shellTools/totalTools:0;
+  }
+})();
+
+// === SHARE BUTTONS ===
+(function(){
+  const url=window.location.href;
+  const name=(D.profile&&D.profile.display_name)||'A builder';
+  const text=name+"'s BuilderBio — see what they shipped with AI coding agents";
+  const xBtn=document.getElementById('share-x');
+  const liBtn=document.getElementById('share-linkedin');
+  if(xBtn)xBtn.href='https://x.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url);
+  if(liBtn)liBtn.href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(url);
+})();
+function copyUrl(){
+  navigator.clipboard.writeText(window.location.href).then(function(){
+    var btn=document.getElementById('share-copy');
+    btn.classList.add('copied');
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="share-tooltip">Copied!</span>';
+    setTimeout(function(){
+      btn.classList.remove('copied');
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span class="share-tooltip">Copy URL</span>';
+    },2000);
+  });
+}
+const INSTALL_CMD='curl -sfL https://builderbio.dev/install.sh | bash';
+function copyInstallCommand(target){
+  if(!target)return;
+  navigator.clipboard.writeText(INSTALL_CMD).then(function(){
+    var copyIcon=target.querySelector('.cta-copy-icon');
+    var copiedIcon=target.querySelector('.cta-copied-icon');
+    if(copyIcon)copyIcon.style.display='none';
+    if(copiedIcon)copiedIcon.style.display='inline-flex';
+    setTimeout(function(){
+      if(copyIcon)copyIcon.style.display='inline-flex';
+      if(copiedIcon)copiedIcon.style.display='none';
+    },2000);
+  });
+}
+
+// === I18N ===
+const LANG=(D.profile&&D.profile.lang)||'zh';
+document.documentElement.lang=LANG==='zh'?'zh':'en';
+if(LANG==='zh'){
+  D.profile.tagline='把 AI 当执行系统来调度的人';
+  D.profile.scan_recommendation='如果你确认自己还使用过其他 agent，但页面里没有显示，建议用最新版本的 BuilderBio 重新扫描。';
+  D.projects=(D.projects||[]).map(function(p){
+    const nameMap={
+      'AI Workflow Playground':'AI 工作流实验场',
+      'Robotics Research Ops':'机器人研究作战台',
+      'Claude Research Desk':'Claude 研究台',
+      'Agent Environment Setup':'Agent 环境搭建',
+      'GTM Canvas':'GTM 画布',
+      '算力冗余 Content System':'算力冗余内容系统',
+      '目澈 Partner Search':'目澈合伙人探索'
+    };
+    const descMap={
+      'AI Workflow Playground':'测试 AI 工作流、插件动作、PPT 本地化、邮箱处理和产品实验的主场。',
+      'Robotics Research Ops':'围绕机器人赛道、论坛评论抓取、面试准备和用户洞察整理的一组研究型工作流。',
+      'Claude Research Desk':'以 Claude Code 为主的高上下文研究区，更偏网页检索、资料整合和深度思考。',
+      'Agent Environment Setup':'早期集中处理本地 agent 工具链安装、接线和验证的一条环境搭建线。',
+      'GTM Canvas':'一条偏正式产品构建的主线，围绕 GTM AI 助理做产品定义、界面生成和多 agent 协同。',
+      '算力冗余 Content System':'围绕公众号和内容生产搭建的写作系统，重点是把 AI 输出逼近自己的编辑标准。',
+      '目澈合伙人探索':'围绕目澈项目、医学背景合伙人和方向判断展开的连续探索。'
+    };
+    const tagMap={
+      'workflow design':'工作流设计',
+      'automation':'自动化',
+      'prototype ops':'原型推进',
+      'robotics':'机器人',
+      'user research':'用户研究',
+      'market sensing':'市场洞察',
+      'web research':'网页研究',
+      'deep dives':'深度调研',
+      'strategy':'策略',
+      'toolchain':'工具链',
+      'environment setup':'环境搭建',
+      'agent stack':'Agent 栈',
+      'GTM':'GTM',
+      'product design':'产品设计',
+      'agent orchestration':'多 Agent 编排',
+      'content system':'内容系统',
+      'editorial workflow':'编辑工作流',
+      'AI writing':'AI 写作',
+      'healthtech':'医疗健康',
+      'partner search':'合伙人探索',
+      'research':'研究'
+    };
+    const originalName=p.name;
+    p.name=nameMap[p.name]||p.name;
+    p.description=descMap[p.name]||descMap[originalName]||p.description;
+    p.summary=p.description;
+    p.tags=(p.tags||[]).map(function(tag){return tagMap[tag]||tag;});
+    return p;
+  });
+  if(D.style){
+    D.style.style_label='终端原生型 Builder';
+    D.style.style_sub='你不是把 AI 当聊天对象，而是把它接入自己的执行链路，让它跟着任务、文件和工作区一起推进结果。';
+    D.style.prompt_type_label='任务驱动';
+    D.style.prompt_type_desc='大多数会话都从具体任务、工作区或待交付物开始，而不是泛泛闲聊。';
+    D.style.rhythm_label='上午推进型';
+    D.style.tool_pref_label='命令流';
+    D.style.loyalty_label='双 Agent 分工';
+    D.style.loyalty_desc='Codex 更像执行面，Claude Code 更像研究面。';
+  }
+  if(E.time){
+    E.time.peak_text='06:00-12:00';
+    E.time.peak_detail='高峰时段约在 09:00';
+  }
+  if(E.tech){
+    E.tech={
+      'Shell / CLI':E.tech['Shell / CLI'],
+      '产品策略':E.tech['Product Strategy'],
+      'AI Agent 生态':E.tech['AI Agent Ecosystem'],
+      '内容处理':E.tech['Content Processing'],
+      '网页研究':E.tech['Web Research'],
+      'Claude Code 技能':E.tech['Claude Code Skills'],
+      '代码阅读':E.tech['Code Reading'],
+      '代码生成':E.tech['Code Generation']
+    };
+  }
+  if(Array.isArray(E.keywords)){
+    E.keywords=E.keywords.map(function(entry){
+      const w=entry[0];
+      const map={'game':'游戏','product':'产品','perspective':'视角','Review':'复盘','Agent':'Agent','user':'用户','skill':'技能','generated':'生成','canvas':'画布','spec':'规格','review':'评审','Assistant':'助手','Research':'研究','design':'设计','breakout':'拆解','poker':'扑克','games':'游戏'};
+      return [map[w]||w, entry[1]];
+    });
+  }
+  if(E.evolution_insight) E.evolution_insight='这段历史不是零散聊天，而是从环境搭建、产品探索，逐步演化到研究运营和双 Agent 协作的连续推进。';
+  if(E.comparison_insight) E.comparison_insight='Codex 是执行主力，命令行密度高、工作区跨度大；Claude Code 出现得更晚，更偏网页检索、研究整合和长链路思考。';
+}
+const I={
+  // Section headers
+  sh_projects:{zh:'我构建了什么',en:'What I Built'},
+  shp_projects:{zh:'用 AI 编程助手一起完成的项目',en:'Projects built with AI coding agents'},
+  sh_tech:{zh:'技术栈指纹',en:'Tech Stack Fingerprint'},
+  shp_tech:{zh:'我最常接触的技术领域',en:'Technologies I work with most'},
+  sh_style:{zh:'我的构建风格',en:'How I Build'},
+  shp_style:{zh:'与 AI 编程助手的协作方式',en:'My collaboration style with AI coding agents'},
+  sh_evolution:{zh:'协作进化曲线',en:'Collaboration Evolution'},
+  shp_evolution:{zh:'每周的构建密度与深度变化',en:'Weekly building intensity and depth over time'},
+  sh_time:{zh:'我是几点钟的 Builder',en:'When I Build'},
+  shp_time:{zh:'24 小时活跃分布',en:'24-hour activity distribution'},
+  sh_keywords:{zh:'脑中关键词',en:'Prompt Keywords'},
+  shp_keywords:{zh:'从所有 Prompt 中提取的高频词',en:'Top keywords extracted from all prompts'},
+  sh_agentcmp:{zh:'Agent 对比面板',en:'Agent Comparison'},
+  shp_agentcmp:{zh:'不同 AI Agent 的使用差异',en:'Usage differences across AI agents'},
+  sh_heatmap:{zh:'活跃度',en:'Activity'},
+  shp_heatmap:{zh:'每日构建热力图',en:'Daily building heatmap'},
+  sh_highlights:{zh:'高光时刻',en:'Highlight Moments'},
+  shp_highlights:{zh:'那些值得分享的瞬间',en:'Moments worth sharing'},
+  // Hero
+  days_active:{zh:'天活跃',en:'days active'},
+  sessions:{zh:'会话',en:'Sessions'},
+  turns:{zh:'轮对话',en:'Turns'},
+  tool_calls:{zh:'工具调用',en:'Tool Calls'},
+  n_sessions:{zh:'次会话',en:'sessions'},
+  // Projects
+  shipped:{zh:'已完成',en:'Shipped'},
+  in_progress:{zh:'进行中',en:'In Progress'},
+  explored:{zh:'已探索',en:'Explored'},
+  p_sessions:{zh:'次会话',en:'sessions'},
+  p_turns:{zh:'轮对话',en:'turns'},
+  p_tools:{zh:'次工具',en:'tool calls'},
+  // Style
+  style_sub_delegator_sprinter:{zh:'以简短指令驱动 AI，高频短对话，重度命令行用户',en:'Drives AI with short commands, frequent brief sessions, heavy CLI user'},
+  prompt_style:{zh:'Prompt 风格',en:'Prompt Style'},
+  prompt_desc_delegator:{zh:'简短指令，信任 AI 自主执行',en:'Short commands, trusts AI to execute autonomously'},
+  session_rhythm:{zh:'会话节奏',en:'Session Rhythm'},
+  tool_pref:{zh:'工具偏好',en:'Tool Preference'},
+  cli_calls:{zh:'命令行调用',en:'CLI calls'},
+  agent_loyalty:{zh:'Agent 忠诚度',en:'Agent Loyalty'},
+  loyalty_desc_poly:{zh:'Claude Code + Codex 双修',en:'Uses both Claude Code and Codex'},
+  tool_dist:{zh:'工具分布',en:'Tool Distribution'},
+  short:{zh:'短',en:'S'},
+  medium:{zh:'中',en:'M'},
+  long:{zh:'长',en:'L'},
+  // Evolution
+  evo_week:{zh:'周',en:'Week'},
+  evo_sessions_suffix:{zh:'次会话',en:'sessions'},
+  evo_turns_suffix:{zh:'轮对话',en:'turns'},
+  evo_avg_suffix:{zh:'轮',en:'turns'},
+  evo_legend:{zh:'每周对话轮次',en:'Weekly turns'},
+  evo_trend:{zh:'趋势洞察：',en:'Trend Insight: '},
+  // Time
+  period_deep_night:{zh:'深夜',en:'Late Night'},
+  period_morning:{zh:'上午',en:'Morning'},
+  period_afternoon:{zh:'下午',en:'Afternoon'},
+  period_evening:{zh:'晚上',en:'Evening'},
+  time_sessions:{zh:'次会话',en:'sessions'},
+  time_turns:{zh:'轮对话',en:'turns'},
+  // Agent comparison
+  cmp_sessions:{zh:'会话',en:'Sessions'},
+  cmp_turns:{zh:'对话轮次',en:'Turns'},
+  cmp_avg:{zh:'平均轮次',en:'Avg Turns'},
+  cmp_tools:{zh:'工具调用',en:'Tool Calls'},
+  cmp_top_tools:{zh:'TOP 工具',en:'Top Tools'},
+  cmp_short_session:{zh:'短',en:'S'},
+  cmp_medium_session:{zh:'中',en:'M'},
+  cmp_long_session:{zh:'长会话',en:'L'},
+  cmp_insight_label:{zh:'使用差异：',en:'Usage Insight: '},
+  // Heatmap
+  hm_turns:{zh:'轮对话',en:'turns'},
+  hm_longest:{zh:'最长连续',en:'Longest streak'},
+  hm_current:{zh:'当前连续',en:'Current streak'},
+  hm_active:{zh:'活跃',en:'Active'},
+  hm_days:{zh:'天',en:'days'},
+  hm_less:{zh:'少',en:'Less'},
+  hm_more:{zh:'多',en:'More'},
+  // Highlights
+  hl_biggest:{zh:'最大会话',en:'Biggest Session'},
+  hl_busiest:{zh:'最忙的一天',en:'Busiest Day'},
+  hl_streak:{zh:'最长连续',en:'Longest Streak'},
+  hl_number:{zh:'一个数字',en:'By the Numbers'},
+  hl_turns_suffix:{zh:'轮',en:'turns'},
+  hl_days_suffix:{zh:'天',en:'days'},
+  hl_streak_desc:{zh:'连续每天都在与 AI 一起构建',en:'Building with AI every single day'},
+  hl_book_prefix:{zh:'≈ 一本',en:'≈ a'},
+  hl_book_suffix:{zh:'页的对话录',en:'page conversation book'},
+  hl_fav_prompt:{zh:'最有代表性的 Prompt',en:'Featured Prompt'},
+  // CTA
+  cta_title:{zh:'Show the world your taste',en:'Show the world your taste'},
+  cta_desc:{zh:'Send this to your coding agent — get your bio link',en:'Send this to your coding agent — get your bio link'},
+  // Footer
+  footer:{zh:'由 <strong>BuilderBio</strong> 生成',en:'Generated by <strong>BuilderBio</strong>'}
+};
+function t(key){return LANG==='zh'?((I[key]&&I[key].zh)||I[key]?.en||key):((I[key]&&I[key].en)||I[key]?.zh||key)}
+
+// === SECTION HEADERS ===
+['projects','tech','style','evolution','time','keywords','agentcmp','heatmap','highlights'].forEach(k=>{
+  const h=document.getElementById('sh-'+k);if(h)h.textContent=t('sh_'+k);
+  const p=document.getElementById('shp-'+k);if(p)p.textContent=t('shp_'+k);
+});
+
+// === HERO ===
+safeRun('hero',function(){
+  const p=D.profile;
+  if(p.avatar_url){
+    const av=document.getElementById('hero-avatar');
+    av.src=p.avatar_url;
+    av.alt=p.display_name||'Avatar';
+    av.style.display='block';
+  }
+  if(p.display_name){
+    document.getElementById('hero-title').textContent=LANG==='zh'?esc(p.display_name)+' 的 AI Builder 档案':esc(p.display_name)+"'s BuilderBio";
+    document.title=LANG==='zh'?esc(p.display_name)+' 的 AI Builder 档案':esc(p.display_name)+"'s BuilderBio";
+  }
+  if(UNFILTERED){
+    const br=document.getElementById('hero-badge-row');
+    br.innerHTML='<span class="unfiltered-badge"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L11 13.17l5.59-5.59L18 9l-7 7z"/></svg>Unfiltered<span class="uf-tip">All data is directly from agent session logs, unmodified</span></span>';
+    br.style.display='block';
+  }
+  if(p.tagline){
+    const tl=document.getElementById('hero-tagline');
+    tl.textContent=p.tagline;
+    tl.style.display='block';
+  }
+  document.getElementById('date-range').textContent=LANG==='zh'
+    ? p.date_range.start+' — '+p.date_range.end+' · 活跃 '+p.active_days+' 天'
+    : p.date_range.start+' → '+p.date_range.end+' · '+p.active_days+' '+t('days_active');
+  document.getElementById('stats-row').innerHTML=[
+    {v:p.total_sessions,l:t('sessions'),c:'ac'},
+    {v:p.total_turns,l:t('turns'),c:'gc'},
+    {v:p.total_tool_calls,l:t('tool_calls'),c:'yc'},
+    {v:p.total_tokens,l:'Tokens',c:'bc'},
+    {v:'$'+TOKEN_VALUE.total_usd.toFixed(2),l:LANG==='zh'?'估算价值':'Est. Value',c:'ac'}
+  ].map(s=>`<div class="stat"><div class="num ${s.c}">${typeof s.v==='number'?fN(s.v):esc(s.v)}</div><div class="lbl">${s.l}</div></div>`).join('');
+  const colors={'claude-code':'var(--ac)','codex':'var(--g)','openclaw':'var(--p)','cursor':'var(--y)'};
+  document.getElementById('agent-row').innerHTML=Object.entries(p.agents_used).map(([n,d])=>{
+    const since=d.first_session?'<span class="agent-since">'+(LANG==='zh'?'自 ':'since ')+d.first_session+'</span>':'';
+    return`<span class="agent-chip"><span class="agent-dot" style="background:${colors[n]||'var(--o)'}"></span><span>${esc(agentLabel(n,(E.comparison||{})[n]))} · ${d.sessions} ${t('n_sessions')}${since}</span></span>`;
+  }).join('');
+  // Social links
+  const socialIcons={
+    linkedin:'<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+    x:'<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    twitter:'<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    github:'<svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
+    youtube:'<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+    website:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>'
+  };
+  const sl=p.social_links||[];
+  if(sl.length){
+    document.getElementById('social-row').innerHTML=sl.map(s=>
+      `<a class="social-link" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" title="${esc(s.platform)}">${socialIcons[s.platform.toLowerCase()]||socialIcons.website}</a>`
+    ).join('');
+  }else{
+    document.getElementById('social-row').style.display='none';
+  }
+  // Generate time
+  if(GEN_TIME && GEN_TIME!=='2026-04-22 09:50'){
+    const gt=document.getElementById('gen-time');
+    gt.textContent=LANG==='zh'?'生成时间 '+GEN_TIME:'Generated on '+GEN_TIME;
+    gt.style.display='block';
+  }
+  const sa=E.scan_audit||{};
+  const ss=sa.summary||{};
+  const audit=document.getElementById('scan-audit');
+  const chips=[];
+  if(p.scanner_version)chips.push(`<span class="scan-chip">scanner ${esc(p.scanner_version)}</span>`);
+  if(Object.keys(p.agent_sources_found||{}).length){
+    const totalSources=Object.values(p.agent_sources_found).reduce((sum,v)=>sum+(Number(v)||0),0);
+    chips.push(`<span class="scan-chip">${LANG==='zh'?totalSources+' 个来源':totalSources+' sources discovered'}</span>`);
+  }
+  if(p.scan_status){
+    const chipClass=p.scan_status==='complete'?'ok':'warn';
+    chips.push(`<span class="scan-chip ${chipClass}">${esc(LANG==='zh'?(p.scan_status==='complete'?'扫描完整':'建议复扫'):(p.scan_status==='complete'?'scan complete':'rescan recommended'))}</span>`);
+  }
+  if((ss.partial_sessions||0)>0)chips.push(`<span class="scan-chip warn">${fN(ss.partial_sessions)} ${LANG==='zh'?'个部分解析会话':'partial sessions'}</span>`);
+  if((ss.unknown_sources||0)>0)chips.push(`<span class="scan-chip warn">${fN(ss.unknown_sources)} ${LANG==='zh'?'个未知来源':'unknown sources'}</span>`);
+  const note=(p.scan_recommendation||sa.warnings&&sa.warnings[0]||'').trim();
+  if(chips.length){
+    audit.innerHTML=chips.join('')+(note?`<div class="scan-note">${esc(note)}</div>`:'');
+    audit.style.display='flex';
+  }
+});
+
+// === RECAP ===
+safeRun('recap',function(){
+  const p=D.profile||{};
+  const thesis=getBuilderThesis();
+  const story=uniq([E.comparison_insight,E.evolution_insight,p.tagline]).filter(function(text){return text&&text!==thesis;})[0]||'';
+  const tasteSignals=getTasteSignals();
+  const topKeywords=(Array.isArray(E.keywords)?E.keywords:[]).slice(0,3).map(function(entry){return Array.isArray(entry)?entry[0]:(entry&&entry.word)||'';}).filter(Boolean);
+  const scale=getCollaborationScale();
+  if(!thesis&&!Number(p.total_tokens||0)){hideSection('recap');return}
+
+  document.getElementById('builder-thesis').innerHTML=`
+    <div class="recap-kicker">${LANG==='zh'?'核心判断':'Builder Thesis'}</div>
+    <div class="recap-title">${esc(thesis)}</div>
+    ${story?`<div class="recap-body">${esc(story)}</div>`:''}
+    ${tasteSignals.length?`<div class="signal-row">${tasteSignals.map(function(signal,index){return`<span class="signal-chip"><span class="signal-dot" style="background:${index%2===0?'var(--ac)':'var(--g)'}"></span>${esc(signal)}</span>`;}).join('')}</div>`:''}
+    ${topKeywords.length?`<div class="signal-row">${topKeywords.map(function(keyword){return`<span class="signal-chip">${esc(keyword)}</span>`;}).join('')}</div>`:''}
+  `;
+
+  document.getElementById('collaboration-scale').innerHTML=`
+    <div class="recap-kicker">${LANG==='zh'?'协作规模':'Collaboration Scale'}</div>
+    <div class="scale-value">${esc(scale.value)}</div>
+    <div class="scale-sub">${esc(scale.copy)}</div>
+    <div class="scale-sub" style="margin-top:14px;color:var(--t2)">${LANG==='zh'?'按模型官方文本 token 单价估算，累计价值约 $'+TOKEN_VALUE.total_usd.toFixed(2)+'，约合 ¥'+TOKEN_VALUE.total_cny_est+'。':'Estimated text-token value is about $'+TOKEN_VALUE.total_usd.toFixed(2)+'.'}</div>
+    <div class="scale-sub" style="font-size:12px">${LANG==='zh'?TOKEN_VALUE.note_zh+' '+TOKEN_VALUE.fx_note:'Excludes extra tool fees such as web search and hosted shell.'}</div>
+    <div class="scale-grid">${scale.stats.map(function(item){return`<div class="scale-stat"><div class="sv">${esc(item.value)}</div><div class="sl">${esc(item.label)}</div></div>`;}).join('')}</div>
+  `;
+});
+
+safeRun('spotlight',function(){
+  const spotlight=document.getElementById('section-spotlight');
+  const signatureCard=document.getElementById('signature-build');
+  const managementCard=document.getElementById('management-style');
+  const signatureProject=pickSignatureProject();
+  const management=deriveManagementStyle();
+
+  if(signatureProject){
+    const proofs=buildSignatureProofs(signatureProject);
+    const signatureSummary=signatureProject.description||signatureProject.summary||(LANG==='zh'?'这条主线聚集了最密集的一段工作证据。':'This is where the clearest concentration of work shows up in the scanned history.');
+    const signatureWhy=signatureProject.tags&&signatureProject.tags.length
+      ? (LANG==='zh'?'它把 '+signatureProject.tags.slice(0,3).join('、')+' 这些能力点和反复出现的注意力集中到了同一条主线上。':'It pulls together '+signatureProject.tags.slice(0,3).join(', ')+' and a repeated block of attention across the logs.')
+      : (LANG==='zh'?'也是从这里开始，零散尝试第一次读起来像一个真正成形的项目。':'This is where the scattered work starts to read like a real build instead of a loose collection of experiments.');
+    signatureCard.innerHTML=`
+      <div class="spotlight-meta">${LANG==='zh'?'代表主线':'Signature Build'}</div>
+      <div class="spotlight-title">${esc(signatureProject.name)}</div>
+      <div class="spotlight-text">${esc(signatureSummary)}</div>
+      <div class="spotlight-text">${esc(signatureWhy)}</div>
+      ${proofs.length?`<div class="spotlight-proof">${proofs.map(function(item){return`<div class="proof-pill"><span class="proof-dot"></span><span>${esc(item)}</span></div>`;}).join('')}</div>`:''}
+    `;
+  }else{
+    signatureCard.style.display='none';
+  }
+
+  if(management.label||management.summary){
+    managementCard.innerHTML=`
+      <div class="spotlight-meta">${LANG==='zh'?'AI 协作方式':'AI Management Style'}</div>
+      <div class="spotlight-title">${esc(management.label)}</div>
+      <div class="spotlight-text">${esc(management.summary)}</div>
+      ${management.traits.length?`<div class="spotlight-proof">${management.traits.map(function(item){return`<div class="proof-pill"><span class="proof-dot"></span><span>${esc(item)}</span></div>`;}).join('')}</div>`:''}
+    `;
+  }else{
+    managementCard.style.display='none';
+  }
+
+  if(signatureCard.style.display==='none'&&managementCard.style.display==='none'){
+    hideSection('spotlight');
+  }
+});
+
+safeRun('agentroles',function(){
+  const roles=deriveAgentRoles();
+  if(!roles.length){hideSection('agentroles');return}
+  document.getElementById('agent-roles').innerHTML=roles.map(function(role){
+    return`<div class="role-card">
+      <div class="role-name"><span class="dot" style="background:${role.color}"></span>${esc(role.name)}</div>
+      <div class="role-tag">${esc(role.role)}</div>
+      <div class="role-text">${esc(role.summary)}</div>
+      <div class="role-evidence">${esc(role.evidence)}</div>
+    </div>`;
+  }).join('');
+});
+
+safeRun('moves',function(){
+  const moves=deriveSignatureMoves();
+  if(!moves.length){hideSection('moves');return}
+  document.getElementById('signature-moves').innerHTML=moves.map(function(move,index){
+    return`<div class="move-card">
+      <div class="recap-kicker">${LANG==='zh'?'动作 '+(index+1):'Move '+(index+1)}</div>
+      <div class="move-title">${esc(move.title)}</div>
+      <div class="move-text">${esc(move.text)}</div>
+      ${move.proof?`<div class="move-proof">${esc(move.proof)}</div>`:''}
+    </div>`;
+  }).join('');
+});
+
+// === PROJECTS ===
+safeRun('projects',function(){
+  if(!Array.isArray(D.projects)||D.projects.length===0){hideSection('projects');return}
+  const sl={'shipped':'ps-shipped','in progress':'ps-progress','explored':'ps-explored'};
+  const sn={'shipped':t('shipped'),'in progress':t('in_progress'),'explored':t('explored')};
+  document.getElementById('projects').innerHTML=(D.projects||[]).map(p=>{
+    const tags=(p.tags||[]).map(t=>`<span class="ptag">${esc(t)}</span>`).join('');
+    const sessionCount=typeof p.total_sessions==='number'?p.total_sessions:(Array.isArray(p.sessions)?p.sessions.length:0);
+    return`<div class="pcard"><div class="pcard-top"><div class="pname">${esc(p.name)}</div><span class="pstatus ${sl[p.status]||'ps-explored'}">${sn[p.status]||p.status}</span></div><div class="pdesc">${esc(p.description||p.summary||'')}</div><div class="ptags">${tags}</div><div class="pmeta"><span><strong>${sessionCount}</strong> ${t('p_sessions')}</span><span><strong>${fN(p.total_turns)}</strong> ${t('p_turns')}</span><span><strong>${fN(p.total_tool_calls)}</strong> ${t('p_tools')}</span></div></div>`;
+  }).join('');
+});
+
+// === TECH RADAR ===
+safeRun('tech-radar',function(){
+  const tech=E.tech;
+  if(!hasEntries(tech)){hideSection('tech');return}
+  const colors=['var(--ac)','var(--g)','var(--y)','var(--b)','var(--p)','var(--o)','var(--pk)','var(--r)','#22d3ee','#2dd4bf'];
+  let h='<div class="radar-bars">';
+  Object.entries(tech).forEach(([name,val],i)=>{
+    h+=`<div class="radar-row"><div class="radar-label">${esc(name)}</div><div class="radar-bar-bg"><div class="radar-bar" style="width:${val}%;background:${colors[i%colors.length]}"></div></div><div class="radar-val">${val}%</div></div>`;
+  });
+  h+='</div>';
+  document.getElementById('tech-radar').innerHTML='<div class="radar-wrap">'+h+'</div>';
+});
+
+// === STYLE ===
+safeRun('style',function(){
+  const st=D.style;const tt=st.tool_totals||{};const total=Object.values(tt).reduce((a,b)=>a+b,0)||1;
+  if(!hasEntries(st)&&!hasEntries(tt)){hideSection('style');return}
+  const sorted=Object.entries(tt).sort((a,b)=>b[1]-a[1]);
+  const bar=sorted.map(([t,c])=>{const pct=((c/total)*100).toFixed(1);return`<div class="tseg" style="width:${pct}%;background:${TC[t]||'#52525b'}" title="${t}: ${c}"></div>`;}).join('');
+  const leg=sorted.filter(([,c])=>c/total>.02).map(([t,c])=>`<span class="tleg-i"><span class="tleg-d" style="background:${TC[t]||'#52525b'}"></span>${t} ${c}</span>`).join('');
+  const sd=st.session_length_distribution||{};
+  document.getElementById('style-section').innerHTML=`
+    <div class="style-hero"><div class="style-label">${esc(st.style_label||'Delegator × Sprinter')}</div><div class="style-sub">${esc(st.style_sub||t('style_sub_delegator_sprinter'))}</div></div>
+    <div class="traits">
+      <div class="trait"><div class="tname">${t('prompt_style')}</div><div class="tval">${esc(st.prompt_type_label||'Delegator')}</div><div class="tdesc">${esc(st.prompt_type_desc||t('prompt_desc_delegator'))}</div></div>
+      <div class="trait"><div class="tname">${t('session_rhythm')}</div><div class="tval">${esc(st.rhythm_label||'Sprinter')}</div><div class="tdesc">${sd.short||0} ${t('short')} · ${sd.medium||0} ${t('medium')} · ${sd.long||0} ${t('long')}</div></div>
+      <div class="trait"><div class="tname">${t('tool_pref')}</div><div class="tval">${esc(st.tool_pref_label||'Commander')}</div><div class="tdesc">${Math.round((st.command_ratio||0)*100)}% ${t('cli_calls')}</div></div>
+      <div class="trait"><div class="tname">${t('agent_loyalty')}</div><div class="tval">${esc(st.loyalty_label||'Multi-agent')}</div><div class="tdesc">${esc(st.loyalty_desc||t('loyalty_desc_poly'))}</div></div>
+    </div>
+    <div class="tbar-wrap"><div class="tbar-label">${t('tool_dist')}</div><div class="tbar">${bar}</div><div class="tleg">${leg}</div></div>`;
+});
+
+// === EVOLUTION CHART ===
+safeRun('evolution',function(){
+  const evo=E.evolution;
+  if(!Array.isArray(evo)||evo.length===0){hideSection('evolution');return}
+  const maxTurns=Math.max(...evo.map(e=>e.turns));
+  let h='<div style="position:relative"><div class="evo-chart">';
+  evo.forEach((e,i)=>{
+    const tH=Math.max(4,Math.round(e.turns/maxTurns*160));
+    const label=e.week.substring(5);
+    const tip=LANG==='zh'?`第${i+1}周: ${e.sessions}次会话, ${e.turns}轮对话, 平均${e.avg_turns}轮`:`Week ${i+1}: ${e.sessions} sessions, ${e.turns} turns, avg ${e.avg_turns}`;
+    h+=`<div class="evo-bar-group">
+      <div class="evo-val">${fN(e.turns)}</div>
+      <div class="evo-bar" style="height:${tH}px;background:linear-gradient(180deg,var(--ac),var(--acd))" title="${tip}"></div>
+      <div class="evo-label">${label}</div>
+    </div>`;
+  });
+  h+='</div>';
+  h+=`<div class="evo-legend"><span><span class="evo-legend-dot" style="background:var(--ac)"></span>${t('evo_legend')}</span></div>`;
+  if(E.evolution_insight){
+    h+='<div style="margin-top:16px;padding:16px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;font-size:13px;color:var(--t2);line-height:1.6">';
+    h+=`<strong style="color:var(--t)">${t('evo_trend')}</strong>${esc(E.evolution_insight)}`;
+    h+='</div>';
+  }
+  h+='</div>';
+  document.getElementById('evolution').innerHTML=h;
+});
+
+// === TIME DISTRIBUTION ===
+safeRun('time-dist',function(){
+  if(!E.time||!hasEntries(E.time.hour_distribution)||!hasEntries(E.time.period_data)){hideSection('time');return}
+  const hd=E.time.hour_distribution;
+  const maxH=Math.max(...Object.values(hd));
+  const pd=E.time.period_data;
+  const periodNames={'deep_night':t('period_deep_night'),'morning':t('period_morning'),'afternoon':t('period_afternoon'),'evening':t('period_evening')};
+  const periodIcons={'deep_night':'🌙','morning':'☀️','afternoon':'⚡','evening':'🦉'};
+
+  let bars='';
+  for(let h=0;h<24;h++){
+    const v=hd[String(h)]||0;
+    const ht=maxH>0?Math.max(2,Math.round(v/maxH*100)):2;
+    const col=h<6?'var(--p)':h<12?'var(--y)':h<18?'var(--o)':'var(--ac)';
+    bars+=`<div class="time-bar" style="height:${ht}%;background:${col}" title="${h}:00 — ${v} ${t('time_sessions')}"><div class="time-tip">${h}:00 · ${v}</div></div>`;
+  }
+
+  let periods='';
+  Object.entries(pd).forEach(([k,v])=>{
+    periods+=`<div class="period-card"><div class="p-name">${periodIcons[k]} ${periodNames[k]}</div><div class="p-val">${v.sessions}</div><div class="p-sub">${fN(v.turns)} ${t('time_turns')}</div></div>`;
+  });
+
+  document.getElementById('time-dist').innerHTML=`
+    <div class="time-bars">${bars}</div>
+    <div class="time-labels"><span>0:00</span><span>6:00</span><span>12:00</span><span>18:00</span><span>23:00</span></div>
+    <div class="time-type"><div class="big">${esc(E.time.peak_text||'')}</div><div class="small">${esc(E.time.peak_detail||'')}</div></div>
+    <div class="period-grid">${periods}</div>`;
+});
+
+// === KEYWORDS ===
+safeRun('keywords',function(){
+  const kw=E.keywords;
+  if(!Array.isArray(kw)||kw.length===0){hideSection('keywords');return}
+  const maxC=Math.max(...kw.map(k=>k[1]));
+  const sizes=[14,16,18,22,26,32];
+  const colors=['var(--tm)','var(--t2)','var(--b)','var(--g)','var(--ac)','var(--y)'];
+  document.getElementById('keywords').innerHTML='<div class="kw-cloud">'+kw.map(([w,c])=>{
+    const lvl=Math.min(5,Math.floor(c/maxC*5));
+    return`<span class="kw" style="font-size:${sizes[lvl]}px;color:${colors[lvl]};background:${lvl>3?'var(--s2)':'var(--s1)'}">${esc(w)}</span>`;
+  }).join('')+'</div>';
+});
+
+// === AGENT COMPARISON ===
+safeRun('agent-cmp',function(){
+  const cmp=E.comparison;
+  if(!cmp||Object.keys(cmp).length<2){hideSection('agentcmp');return}
+  const agentLabels={'claude-code':'Claude Code','codex':'Codex'};
+  const agentColors={'claude-code':'var(--ac)','codex':'var(--g)'};
+  let h='<div class="cmp-grid">';
+  Object.entries(cmp).forEach(([agent,data])=>{
+    const maxTool=Math.max(...data.top_tools.map(t=>t[1]));
+    const toolBars=data.top_tools.slice(0,4).map(([tl,c])=>{
+      const pct=Math.round(c/maxTool*100);
+      const col=TC[tl]||'#52525b';
+      return`<div class="cmp-tool-row"><span style="width:80px;flex-shrink:0">${tl}</span><div class="cmp-tool-bar"><div class="cmp-tool-fill" style="width:${pct}%;background:${col}"></div></div><span style="width:36px;text-align:right">${c}</span></div>`;
+    }).join('');
+    const dist=data.distribution;
+    h+=`<div class="cmp-card">
+      <div class="cmp-name"><span class="dot" style="background:${agentColors[agent]}"></span>${agentLabels[agent]||agent}</div>
+      <div class="cmp-stats">
+        <div class="cmp-stat"><div class="cv">${data.sessions}</div><div class="cl">${t('cmp_sessions')}</div></div>
+        <div class="cmp-stat"><div class="cv">${fN(data.total_turns)}</div><div class="cl">${t('cmp_turns')}</div></div>
+        <div class="cmp-stat"><div class="cv">${data.avg_turns}</div><div class="cl">${t('cmp_avg')}</div></div>
+        <div class="cmp-stat"><div class="cv">${fN(data.total_tool_calls)}</div><div class="cl">${t('cmp_tools')}</div></div>
+      </div>
+      <div class="cmp-tools"><div class="cmp-tools-label">${t('cmp_top_tools')}</div>${toolBars}</div>
+      <div style="margin-top:12px;font-size:12px;color:var(--tm)">${dist.short} ${t('cmp_short_session')} · ${dist.medium} ${t('cmp_medium_session')} · ${dist.long} ${t('cmp_long_session')}</div>
+    </div>`;
+  });
+  h+='</div>';
+  if(E.comparison_insight){
+    h+='<div style="margin-top:16px;padding:16px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;font-size:13px;color:var(--t2);line-height:1.6">';
+    h+=`<strong style="color:var(--t)">${t('cmp_insight_label')}</strong>${esc(E.comparison_insight)}`;
+    h+='</div>';
+  }
+  document.getElementById('agent-cmp').innerHTML=h;
+});
+
+// === HEATMAP ===
+safeRun('heatmap',function(){
+  const hm=D.heatmap||{};const dates=Object.keys(hm).sort();if(!dates.length){hideSection('heatmap');return}
+  const firstDate=new Date(dates[0]+'T00:00:00');const dow=firstDate.getDay()||7;const padBefore=dow-1;
+  let cells='';for(let i=0;i<padBefore;i++)cells+='<div class="hm-cell hm-0"></div>';
+  dates.forEach(d=>{const v=hm[d]||0;const lvl=v===0?0:v<20?1:v<100?2:v<300?3:4;cells+=`<div class="hm-cell hm-${lvl}" title="${d}: ${v} ${t('hm_turns')}"></div>`;});
+  const hl=D.highlights;
+  document.getElementById('heatmap').innerHTML=`
+    <div class="hm-scroll"><div class="hm-grid">${cells}</div></div>
+    <div class="hm-meta"><span>${t('hm_longest')}: <strong>${hl.longest_streak} ${t('hm_days')}</strong></span><span>${t('hm_current')}: <strong>${hl.current_streak} ${t('hm_days')}</strong></span><span>${t('hm_active')}: <strong>${D.profile.active_days}/${dates.length} ${t('hm_days')}</strong></span></div>
+    <div class="hm-legend"><span>${t('hm_less')}</span><div class="hm-legend-cell hm-0"></div><div class="hm-legend-cell hm-1"></div><div class="hm-legend-cell hm-2"></div><div class="hm-legend-cell hm-3"></div><div class="hm-legend-cell hm-4"></div><span>${t('hm_more')}</span></div>`;
+});
+
+// === HIGHLIGHTS ===
+safeRun('highlights',function(){
+  const hl=D.highlights;const bs=hl.biggest_session;const bd=hl.busiest_day;
+  if(!hl||!bs||!bd){hideSection('highlights');return}
+  const totalTurns=D.profile.total_turns;const pages=Math.round(totalTurns/3);
+  document.getElementById('highlights').innerHTML=`
+    <div class="hl-grid">
+      <div class="hl"><div class="hl-t">${t('hl_biggest')}</div><div class="hl-v">${fN(bs.turns)} ${t('hl_turns_suffix')}</div><div class="hl-d">${esc(bs.display)}</div></div>
+      <div class="hl"><div class="hl-t">${t('hl_busiest')}</div><div class="hl-v">${bd.date}</div><div class="hl-d">${bd.sessions} ${t('p_sessions')} · ${fN(bd.turns)} ${t('p_turns')}</div></div>
+      <div class="hl"><div class="hl-t">${t('hl_streak')}</div><div class="hl-v">${hl.longest_streak} ${t('hl_days_suffix')}</div><div class="hl-d">${t('hl_streak_desc')}</div></div>
+      <div class="hl"><div class="hl-t">${t('hl_number')}</div><div class="hl-v">${fN(totalTurns)} ${t('hl_turns_suffix')}</div><div class="hl-d">${t('hl_book_prefix')} ${fN(pages)} ${t('hl_book_suffix')}</div></div>
+    </div>
+    <div class="fav-prompt"><div class="fp-label">${t('hl_fav_prompt')}</div><div class="fp-text">${esc(hl.favorite_prompt)}</div></div>`;
+});
+
+// === CTA ===
+document.getElementById('cta-section').innerHTML=`<div class="cta">
+  <div class="cta-title">${LANG==='zh'?'想生成你自己的 AI Builder 档案？':'Like what you see?'}</div>
+  <div class="cta-install-label">${LANG==='zh'?'复制给你的编程助手':'PASTE INTO YOUR CODING AGENT'}</div>
+  <div class="cta-badges">
+    <span class="cta-badge">OpenClaw</span>
+    <span class="cta-badge">Codex</span>
+    <span class="cta-badge">Claude Code</span>
+    <span class="cta-badge">Cursor</span>
+    <span class="cta-badge cta-badge-more">...</span>
+  </div>
+  <div class="cta-cmd" onclick="copyInstallCommand(this)">
+    <div class="cta-cmd-main">
+      <span class="cta-dollar">$</span>
+      <span class="cta-command-text">${INSTALL_CMD}</span>
+    </div>
+    <button type="button" class="cta-copy-btn" title="${LANG==='zh'?'复制命令':'Copy to clipboard'}" aria-label="${LANG==='zh'?'复制命令':'Copy to clipboard'}" onclick="event.stopPropagation();copyInstallCommand(this.closest('.cta-cmd'))">
+      <span class="cta-copy-icon"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></span>
+      <span class="cta-copied-icon" style="display:none"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    </button>
+  </div>
+</div>`;
+
+// === FOOTER ===
+document.getElementById('footer-text').innerHTML=LANG==='zh'
+  ? '<p style="margin:0 0 8px">从本地 AI 日志中整理出来的一页 Builder 档案</p><div style="color:var(--tm)">这版先保留原始英文页面的结构，只把内容翻成中文，不额外加入新的视觉判断。</div>'
+  : '<p style="margin:0 0 8px">The bio link for builders who ship with AI</p><div style="display:flex;align-items:center;justify-content:center;gap:16px"><a href="https://x.com/gavin0922" target="_blank" rel="noopener noreferrer" style="color:var(--tm);transition:color .2s" title="X (Twitter)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/in/gavin-c-b271a492/" target="_blank" rel="noopener noreferrer" style="color:var(--tm);transition:color .2s" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div>';
+</script>
+</body>
+</html>
