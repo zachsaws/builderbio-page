@@ -1,7 +1,8 @@
 # BuilderBio Page
 
-This repository hosts a static BuilderBio page via GitHub Pages.
+This repository hosts static BuilderBio pages via GitHub Pages.
 
-Published file:
+Published pages:
 
-- `index.html`
+- `index.html` — public AI Builder archive for tianxiang.
+- `tianxiang-ai-builder.html` — business-readable AI Builder operating profile.
